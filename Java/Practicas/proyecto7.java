@@ -11,11 +11,11 @@ public class proyecto7 {
         index = leer.nextInt();
         lista = new float[index];
         for (i = 0; i < index; i++) {
+            leer.nextLine();
             System.out.println("Ingresa el valor numero " + (i + 1));
             lista[i] = leer.nextFloat();
             sum += lista[i];
         }
-        leer.nextLine();
         leer.close();
         prom = sum / index;
         System.out.println("El promedio es:" + prom);
