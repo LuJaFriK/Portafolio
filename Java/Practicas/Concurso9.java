@@ -3,15 +3,9 @@ import java.util.ArrayList;
 public class Concurso9 {
     public static void main (String[]args){
         ArrayList<String> trabajadores = new ArrayList<>();
-        trabajadores.add("Sebas");
-        trabajadores.add("Luis");
-        trabajadores.add("Paco");
-        trabajadores.add("Memo");
-        trabajadores.add("Hugo");
         Scanner leer = new Scanner (System.in);
-        int opc=0,i=0;
+        int opc=0;
         String srch;
-        boolean found = false;
         do{
             System.out.println("1.- Agregar un trabajador.");
             System.out.println("2.- Modificar el nombre de un trabajador.");
@@ -61,9 +55,10 @@ public class Concurso9 {
         boolean found = false;
         int i=0;
         do{
-            if(trabajadores.get(i).equals(srch)){
+            if(i==trabajadores.size()&&found==false){
+                return -1;
+            }else if(trabajadores.get(i).equals(srch)){
                 found = true;
-            }else if(i==trabajadores.size()&&found==false){i=-1;
             }else{i++;}   
         }while(found==false || i==-1);
         return i;
