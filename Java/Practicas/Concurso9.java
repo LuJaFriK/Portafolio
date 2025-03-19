@@ -3,6 +3,8 @@ import java.util.ArrayList;
 public class Concurso9 {
     public static void main (String[]args){
         ArrayList<String> trabajadores = new ArrayList<>();
+        int[] arr = {1,2,3,4};
+        trabajadores.stream().filter( (s) -> s.equals("luis"));
         Scanner leer = new Scanner (System.in);
         int opc=0;
         String srch;
