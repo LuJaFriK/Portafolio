@@ -1,3 +1,13 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package hospital;
+
+/**
+ *
+ * @author lujafrik
+ */
 public class Medico {
     private String nombre;
     private int cedula;
@@ -9,7 +19,7 @@ public class Medico {
         escuela = null;
     }
     
-    public Medico(String nombre,int cedula,String Escuela){
+    public Medico(String nombre,int cedula,String escuela){
         this.nombre = nombre;
         this.cedula = cedula;
         this.escuela = escuela;
@@ -32,11 +42,11 @@ public class Medico {
     }
 
     public String getEscuela() {
-        return Escuela;
+        return escuela;
     }
 
     public void setEscuela(String escuela) {
-        this.Escuela = escuela;
+        this.escuela = escuela;
     }
     
     public void atenderPaciente(){

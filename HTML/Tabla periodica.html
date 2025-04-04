@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabla Periódica Interactiva Completa (Español)</title>
+    <style>
+        :root {
+            --table-bg: #f8f9fa;
+            --element-border: #adb5bd;
+            --details-bg: #e9ecef;
+            --details-border: #ced4da;
+            --text-color: #212529;
+            --hover-shadow: rgba(0, 0, 0, 0.2);
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #dee2e6;
+            margin: 0;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        #app-container {
+            width: 100%;
+            max-width: 1400px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        #element-details {
+            border: 1px solid var(--details-border);
+            background-color: var(--details-bg);
+            padding: 15px 20px;
+            margin-bottom: 25px;
+            min-height: 110px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.08);
+            color: var(--text-color);
+        }
+        #element-details h2 {
+            margin-top: 0;
+            margin-bottom: 12px;
+            color: #0056b3;
+            font-size: 1.6em;
+        }
+        #element-details p {
+             margin: 6px 0;
+             font-size: 0.95em;
+             line-height: 1.5;
+        }
+         #element-details span {
+            font-weight: 600;
+            color: #495057;
+            margin-right: 5px;
+         }
+        #periodic-table-wrapper {
+             width: 100%;
+             overflow-x: auto;
+        }
+        #periodic-table {
+            display: grid;
+            grid-template-columns: repeat(18, minmax(50px, 1fr));
+            grid-template-rows: repeat(10, minmax(55px, 1fr));
+            gap: 4px;
+            min-width: 1000px;
+            padding-bottom: 10px;
+            margin: 0 auto;
+        }
+        .element {
+            border: 1px solid var(--element-border);
+            padding: 4px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.15s ease, background-color 0.2s ease, box-shadow 0.15s ease;
+            font-size: 0.65em;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            align-items: center;
+            min-height: 55px;
+            border-radius: 4px;
+            position: relative;
+            overflow: hidden;
+            background-color: var(--table-bg);
+        }
+        .element:hover {
+            transform: scale(1.15);
+            box-shadow: 0 0 12px var(--hover-shadow);
+            z-index: 10;
+            border-color: #343a40;
+        }
+        .element .number {
+            position: absolute;
+            top: 2px;
+            left: 3px;
+            font-size: 0.9em;
+            color: #6c757d;
+        }
+        .element .symbol {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin: 1px 0;
+        }
+        .element .name {
+            font-size: 0.85em;
+            word-break: break-word;
+            line-height: 1.1;
+             margin-top: 2px;
+        }
+         .element .mass {
+             font-size: 0.8em;
+             color: #495057;
+             margin-top: auto;
+         }
+        .diatomic-nonmetal { background-color: #a7f3d0; border-color: #34d399; }
+        .polyatomic-nonmetal { background-color: #a7f3d0; border-color: #34d399; }
+        .noble-gas { background-color: #bfdbfe; border-color: #60a5fa; }
+        .alkali-metal { background-color: #fde68a; border-color: #facc15; }
+        .alkaline-earth-metal { background-color: #fef3c7; border-color: #fcd34d; }
+        .metalloid { background-color: #d1fae5; border-color: #6ee7b7; }
+        .post-transition-metal { background-color: #e5e7eb; border-color: #9ca3af; }
+        .transition-metal { background-color: #fecaca; border-color: #f87171; }
+        .lanthanide { background-color: #fbcfe8; border-color: #f472b6; }
+        .actinide { background-color: #e9d5ff; border-color: #c084fc; }
+        .unknown, .properties-unknown { background-color: #f3f4f6; border-color: #d1d5db; }
+        .empty { visibility: hidden; }
+    </style>
+</head>
+<body>
+
+<div id="app-container">
+    <h1>Tabla Periódica de los Elementos</h1>
+
+    <div id="element-details">
+        <p>Haz clic en un elemento para ver sus detalles.</p>
+    </div>
+
+    <div id="periodic-table-wrapper">
+        <div id="periodic-table">
+            <!-- Elementos generados por JS -->
+        </div>
+    </div>
+</div>
+
+<script>
+    const elementsData = [
+      {"number": 1, "symbol": "H", "name": "Hidrógeno", "atomic_mass": 1.008, "category_en": "diatomic nonmetal", "category": "No metal diatómico", "phase": "Gas", "summary": "Elemento más ligero, componente esencial del agua.", "xpos": 1, "ypos": 1},
+      {"number": 2, "symbol": "He", "name": "Helio", "atomic_mass": 4.002602, "category_en": "noble gas", "category": "Gas noble", "phase": "Gas", "summary": "Gas inerte, usado en globos y criogenia.", "xpos": 18, "ypos": 1},
+      {"number": 3, "symbol": "Li", "name": "Litio", "atomic_mass": 6.94, "category_en": "alkali metal", "category": "Metal alcalino", "phase": "Sólido", "summary": "Metal más ligero, usado en baterías.", "xpos": 1, "ypos": 2},
+      {"number": 4, "symbol": "Be", "name": "Berilio", "atomic_mass": 9.0121831, "category_en": "alkaline earth metal", "category": "Metal alcalinotérreo", "phase": "Sólido", "summary": "Metal ligero usado en aleaciones y la industria aeroespacial.", "xpos": 2, "ypos": 2},
+      {"number": 5, "symbol": "B", "name": "Boro", "atomic_mass": 10.81, "category_en": "metalloid", "category": "Metaloide", "phase": "Sólido", "summary": "Usado en fibra de vidrio, detergentes y semiconductores.", "xpos": 13, "ypos": 2},
+      {"number": 6, "symbol": "C", "name": "Carbono", "atomic_mass": 12.011, "category_en": "polyatomic nonmetal", "category": "No metal poliatómico", "phase": "Sólido", "summary": "Base de la química orgánica, forma diamante y grafito.", "xpos": 14, "ypos": 2},
+      {"number": 7, "symbol": "N", "name": "Nitrógeno", "atomic_mass": 14.007, "category_en": "diatomic nonmetal", "category": "No metal diatómico", "phase": "Gas", "summary": "Componente mayoritario de la atmósfera terrestre, esencial para la vida.", "xpos": 15, "ypos": 2},
+      {"number": 8, "symbol": "O", "name": "Oxígeno", "atomic_mass": 15.999, "category_en": "diatomic nonmetal", "category": "No metal diatómico", "phase": "Gas", "summary": "Esencial para la respiración y la combustión.", "xpos": 16, "ypos": 2},
+      {"number": 9, "symbol": "F", "name": "Flúor", "atomic_mass": 18.998403163, "category_en": "diatomic nonmetal", "category": "No metal diatómico", "phase": "Gas", "summary": "Elemento más electronegativo, muy reactivo.", "xpos": 17, "ypos": 2},
+      {"number": 10, "symbol": "Ne", "name": "Neón", "atomic_mass": 20.1797, "category_en": "noble gas", "category": "Gas noble", "phase": "Gas", "summary": "Gas inerte usado en iluminación (letreros de 'neón').", "xpos": 18, "ypos": 2},
+      {"number": 11, "symbol": "Na", "name": "Sodio", "atomic_mass": 22.98976928, "category_en": "alkali metal", "category": "Metal alcalino", "phase": "Sólido", "summary": "Metal reactivo, componente de la sal de mesa (NaCl).", "xpos": 1, "ypos": 3},
+      {"number": 12, "symbol": "Mg", "name": "Magnesio", "atomic_mass": 24.305, "category_en": "alkaline earth metal", "category": "Metal alcalinotérreo", "phase": "Sólido", "summary": "Metal ligero, usado en aleaciones y fuegos artificiales.", "xpos": 2, "ypos": 3},
+      {"number": 13, "symbol": "Al", "name": "Aluminio", "atomic_mass": 26.9815385, "category_en": "post-transition metal", "category": "Metal postransicional", "phase": "Sólido", "summary": "Metal ligero y resistente a la corrosión.", "xpos": 13, "ypos": 3},
+      {"number": 14, "symbol": "Si", "name": "Silicio", "atomic_mass": 28.085, "category_en": "metalloid", "category": "Metaloide", "phase": "Sólido", "summary": "Componente clave de semiconductores y vidrio.", "xpos": 14, "ypos": 3},
+      {"number": 15, "symbol": "P", "name": "Fósforo", "atomic_mass": 30.973761998, "category_en": "polyatomic nonmetal", "category": "No metal poliatómico", "phase": "Sólido", "summary": "Esencial para la vida (ADN, ATP), usado en fertilizantes.", "xpos": 15, "ypos": 3},
+      {"number": 16, "symbol": "S", "name": "Azufre", "atomic_mass": 32.06, "category_en": "polyatomic nonmetal", "category": "No metal poliatómico", "phase": "Sólido", "summary": "Componente de aminoácidos, usado en la pólvora.", "xpos": 16, "ypos": 3},
+      {"number": 17, "symbol": "Cl", "name": "Cloro", "atomic_mass": 35.45, "category_en": "diatomic nonmetal", "category": "No metal diatómico", "phase": "Gas", "summary": "Halógeno reactivo, usado como desinfectante.", "xpos": 17, "ypos": 3},
+      {"number": 18, "symbol": "Ar", "name": "Argón", "atomic_mass": 39.948, "category_en": "noble gas", "category": "Gas noble", "phase": "Gas", "summary": "Gas inerte usado en soldadura y bombillas.", "xpos": 18, "ypos": 3},
+      {"number": 19, "symbol": "K", "name": "Potasio", "atomic_mass": 39.0983, "category_en": "alkali metal", "category": "Metal alcalino", "phase": "Sólido", "summary": "Metal reactivo, nutriente esencial para plantas y animales.", "xpos": 1, "ypos": 4},
+      {"number": 20, "symbol": "Ca", "name": "Calcio", "atomic_mass": 40.078, "category_en": "alkaline earth metal", "category": "Metal alcalinotérreo", "phase": "Sólido", "summary": "Esencial para huesos y dientes, usado en cemento.", "xpos": 2, "ypos": 4},
+      {"number": 21, "symbol": "Sc", "name": "Escandio", "atomic_mass": 44.955908, "category_en": "transition metal", "category": "Metal de transición", "phase": "Sólido", "summary": "Usado en iluminación de alta intensidad y aleaciones.", "xpos": 3, "ypos": 4},
+      {"number": 22, "symbol": "Ti", "name": "Titanio", "atomic_mass": 47.867, "category_en": "transition metal", "category": "Metal de transición", "phase": "Sólido", "summary": "Metal fuerte, ligero y resistente a la corrosión.", "xpos": 4, "ypos": 4},
+      {"number": 23, "symbol": "V", "name": "Vanadio", "atomic_mass": 50.9415, "category_en": "transition metal", "category": "Metal de transición", "phase": "Sólido", "summary": "Usado para reforzar aleaciones de acero.", "xpos": 5, "ypos": 4},
+      {"number": 24, "symbol": "Cr", "name": "Cromo", "atomic_mass": 51.9961, "category_en": "transition metal", "category": "Metal de transición", "phase": "Sólido", "summary": "Usado en acero inoxidable y cromado.", "xpos": 6, "ypos": 4},
+      {"number": 25, "symbol": "Mn", "name": "Manganeso", "atomic_mass": 54.938044, "category_en": "transition metal", "category": "Metal de transición", "phase": "Sólido", "summary": "Oligoelemento esencial, usado en la producción de acero.", "xpos": 7, "ypos": 4},
+      {"number": 26, "symbol": "Fe", "name": "Hierro", "atomic_mass": 55.845, "category_en": "transition metal", "category": "Metal de transición", "phase": "Sólido", "summary": "Componente principal del acero, esencial en la hemoglobina.", "xpos": 8, "ypos": 4},
+      {"number": 27, "symbol": "Co", "name": "Cobalto", "atomic_mass": 58.933194, "category_en": "transition metal", "category": "Metal de transición", "phase": "Sólido", "summary": "Usado en imanes, aleaciones y pigmentos (azul).", "xpos": 9, "ypos": 4},
+      {"number": 28, "symbol": "Ni", "name": "Níquel", "atomic_mass": 58.6934, "category_en": "transition metal", "category": "Metal de transición", "phase": "Sólido", "summary": "Usado en acero inoxidable, baterías y monedas.", "xpos": 10, "ypos": 4},
+      {"number": 29, "symbol": "Cu", "name": "Cobre", "atomic_mass": 63.546, "category_en": "transition metal", "category": "Metal de transición", "phase": "Sólido", "summary": "Excelente conductor eléctrico, usado en cableado.", "xpos": 11, "ypos": 4},
+      {"number": 30, "symbol": "Zn", "name": "Zinc", "atomic_mass": 65.38, "category_en": "transition metal", "category": "Metal de transición", "phase": "Sólido", "summary": "Usado en galvanizado de acero y en baterías.", "xpos": 12, "ypos": 4},
+      {"number": 31, "symbol": "Ga", "name": "Galio", "atomic_mass": 69.723, "category_en": "post-transition metal", "category": "Metal postransicional", "phase": "Sólido", "summary": "Metal de bajo punto de fusión, usado en semiconductores.", "xpos": 13, "ypos": 4},
+      {"number": 32, "symbol": "Ge", "name": "Germanio", "atomic_mass": 72.63, "category_en": "metalloid", "category": "Metaloide", "phase": "Sólido", "summary": "Semiconductor usado en electrónica y óptica.", "xpos": 14, "ypos": 4},
+      {"number": 33, "symbol": "As", "name": "Arsénico", "atomic_mass": 74.921595, "category_en": "metalloid", "category": "Metaloide", "phase": "Sólido", "summary": "Metaloide tóxico, usado en pesticidas y aleaciones.", "xpos": 15, "ypos": 4},
+      {"number": 34, "symbol": "Se", "name": "Selenio", "atomic_mass": 78.971, "category_en": "polyatomic nonmetal", "category": "No metal poliatómico", "phase": "Sólido", "summary": "Usado en fotocélulas y como nutriente.", "xpos": 16, "ypos": 4},
+      {"number": 35, "symbol": "Br", "name": "Bromo", "atomic_mass": 79.904, "category_en": "diatomic nonmetal", "category": "No metal diatómico", "phase": "Líquido", "summary": "Único no metal líquido a T amb., usado en retardantes de llama.", "xpos": 17, "ypos": 4},
+      {"number": 36, "symbol": "Kr", "name": "Kriptón", "atomic_mass": 83.798, "category_en": "noble gas", "category": "Gas noble", "phase": "Gas", "summary": "Gas inerte usado en iluminación y láseres.", "xpos": 18, "ypos": 4},
+      {"number": 37, "symbol": "Rb", "name": "Rubidio", "atomic_mass": 85.4678, "category_en": "alkali metal", "category": "Metal alcalino", "phase": "Sólido", "summary": "Metal muy reactivo, usado en relojes atómicos.", "xpos": 1, "ypos": 5},
+      {"number": 38, "symbol": "Sr", "name": "Estroncio", "atomic_mass": 87.62, "category_en": "alkaline earth metal", "category": "Metal alcalinotérreo", "phase": "Sólido", "summary": "Usado en fuegos artificiales (color rojo) y pasta de dientes.", "xpos": 2, "ypos": 5},
+      {"number": 39, "symbol": "Y", "name": "Itrio", "atomic_mass": 88.90584, "category_en": "transition metal", "category": "Metal de transición", "phase": "Sólido", "summary": "Usado en láseres, superconductores y fósforos.", "xpos": 3, "ypos": 5},
+      {"number": 40, "symbol": "Zr", "name": "Circonio", "atomic_mass": 91.224, "category_en": "transition metal", "category": "Metal de transición", "phase": "Sólido", "summary": "Resistente a la corrosión, usado en reactores nucleares.", "xpos": 4, "ypos": 5},
+      {"number": 41, "symbol": "Nb", "name": "Niobio", "atomic_mass": 92.90637, "category_en": "transition metal", "category": "Metal de transición", "phase": "Sólido", "summary": "Usado en imanes superconductores y aleaciones.", "xpos": 5, "ypos": 5},
+      {"number": 42, "symbol": "Mo", "name": "Molibdeno", "atomic_mass": 95.96, "category_en": "transition metal", "category": "Metal de transición", "phase": "Sólido", "summary": "Usado en aleaciones de acero de alta resistencia.", "xpos": 6, "ypos": 5},
+      {"number": 43, "symbol": "Tc", "name": "Tecnecio", "atomic_mass": "[98]", "category_en": "transition metal", "category": "Metal de transición", "phase": "Sólido", "summary": "Elemento más ligero sin isótopos estables, usado en imagen médica.", "xpos": 7, "ypos": 5},
+      {"number": 44, "symbol": "Ru", "name": "Rutenio", "atomic_mass": 101.07, "category_en": "transition metal", "category": "Metal de transición", "phase": "Sólido", "summary": "Metal raro usado en catalizadores y electrónica.", "xpos": 8, "ypos": 5},
+      {"number": 45, "symbol": "Rh", "name": "Rodio", "atomic_mass": 102.90550, "category_en": "transition metal", "category": "Metal de transición", "phase": "Sólido", "summary": "Metal raro y resistente a la corrosión usado en catalizadores.", "xpos": 9, "ypos": 5},
+      {"number": 46, "symbol": "Pd", "name": "Paladio", "atomic_mass": 106.42, "category_en": "transition metal", "category": "Metal de transición", "phase": "Sólido", "summary": "Usado en catalizadores y joyería.", "xpos": 10, "ypos": 5},
+      {"number": 47, "symbol": "Ag", "name": "Plata", "atomic_mass": 107.8682, "category_en": "transition metal", "category": "Metal de transición", "phase": "Sólido", "summary": "Mejor conductor eléctrico, usado en joyería y electrónica.", "xpos": 11, "ypos": 5},
+      {"number": 48, "symbol": "Cd", "name": "Cadmio", "atomic_mass": 112.414, "category_en": "transition metal", "category": "Metal de transición", "phase": "Sólido", "summary": "Metal tóxico usado en baterías y pigmentos.", "xpos": 12, "ypos": 5},
+      {"number": 49, "symbol": "In", "name": "Indio", "atomic_mass": 114.818, "category_en": "post-transition metal", "category": "Metal postransicional", "phase": "Sólido", "summary": "Metal blando usado en pantallas LCD (ITO).", "xpos": 13, "ypos": 5},
+      {"number": 50, "symbol": "Sn", "name": "Estaño", "atomic_mass": 118.710, "category_en": "post-transition metal", "category": "Metal postransicional", "phase": "Sólido", "summary": "Usado en soldaduras y recubrimientos (hojalata).", "xpos": 14, "ypos": 5},
+      {"number": 51, "symbol": "Sb", "name": "Antimonio", "atomic_mass": 121.760, "category_en": "metalloid", "category": "Metaloide", "phase": "Sólido", "summary": "Usado en retardantes de llama y aleaciones.", "xpos": 15, "ypos": 5},
+      {"number": 52, "symbol": "Te", "name": "Telurio", "atomic_mass": 127.60, "category_en": "metalloid", "category": "Metaloide", "phase": "Sólido", "summary": "Usado en aleaciones y semiconductores.", "xpos": 16, "ypos": 5},
+      {"number": 53, "symbol": "I", "name": "Yodo", "atomic_mass": 126.90447, "category_en": "diatomic nonmetal", "category": "No metal diatómico", "phase": "Sólido", "summary": "Nutriente esencial (tiroides), usado como antiséptico.", "xpos": 17, "ypos": 5},
+      {"number": 54, "symbol": "Xe", "name": "Xenón", "atomic_mass": 131.293, "category_en": "noble gas", "category": "Gas noble", "phase": "Gas", "summary": "Gas inerte pesado usado en iluminación y anestesia.", "xpos": 18, "ypos": 5},
+      {"number": 55, "symbol": "Cs", "name": "Cesio", "atomic_mass": 132.90545196, "category_en": "alkali metal", "category": "Metal alcalino", "phase": "Sólido", "summary": "Metal alcalino más reactivo, usado en relojes atómicos.", "xpos": 1, "ypos": 6},
+      {"number": 56, "symbol": "Ba", "name": "Bario", "atomic_mass": 137.327, "category_en": "alkaline earth metal", "category": "Metal alcalinotérreo", "phase": "Sólido", "summary": "Usado en imagen médica (papilla de bario) y fuegos artificiales.", "xpos": 2, "ypos": 6},
+      {"number": 57, "symbol": "La", "name": "Lantano", "atomic_mass": 138.90547, "category_en": "lanthanide", "category": "Lantánido", "phase": "Sólido", "summary": "Considerado a menudo el primer lantánido, aunque está en el bloque d.", "xpos": 3, "ypos": 6},
+      {"number": 58, "symbol": "Ce", "name": "Cerio", "atomic_mass": 140.116, "category_en": "lanthanide", "category": "Lantánido", "phase": "Sólido", "summary": "El elemento de tierras raras más abundante.", "xpos": 4, "ypos": 9},
+      {"number": 59, "symbol": "Pr", "name": "Praseodimio", "atomic_mass": 140.90766, "category_en": "lanthanide", "category": "Lantánido", "phase": "Sólido", "summary": "Usado en imanes y para colorear vidrio de amarillo-verde.", "xpos": 5, "ypos": 9},
+      {"number": 60, "symbol": "Nd", "name": "Neodimio", "atomic_mass": 144.242, "category_en": "lanthanide", "category": "Lantánido", "phase": "Sólido", "summary": "Usado en potentes imanes (NdFeB).", "xpos": 6, "ypos": 9},
+      {"number": 61, "symbol": "Pm", "name": "Prometio", "atomic_mass": "[145]", "category_en": "lanthanide", "category": "Lantánido", "phase": "Sólido", "summary": "Lantánido radiactivo, usado en pintura luminiscente.", "xpos": 7, "ypos": 9},
+      {"number": 62, "symbol": "Sm", "name": "Samario", "atomic_mass": 150.36, "category_en": "lanthanide", "category": "Lantánido", "phase": "Sólido", "summary": "Usado en imanes y reactores nucleares.", "xpos": 8, "ypos": 9},
+      {"number": 63, "symbol": "Eu", "name": "Europio", "atomic_mass": 151.964, "category_en": "lanthanide", "category": "Lantánido", "phase": "Sólido", "summary": "Usado como fósforo rojo en pantallas CRT y LEDs.", "xpos": 9, "ypos": 9},
+      {"number": 64, "symbol": "Gd", "name": "Gadolinio", "atomic_mass": 157.25, "category_en": "lanthanide", "category": "Lantánido", "phase": "Sólido", "summary": "Usado en agentes de contraste de RMN y reactores nucleares.", "xpos": 10, "ypos": 9},
+      {"number": 65, "symbol": "Tb", "name": "Terbio", "atomic_mass": 158.92535, "category_en": "lanthanide", "category": "Lantánido", "phase": "Sólido", "summary": "Usado como fósforo verde y en dispositivos de estado sólido.", "xpos": 11, "ypos": 9},
+      {"number": 66, "symbol": "Dy", "name": "Disprosio", "atomic_mass": 162.500, "category_en": "lanthanide", "category": "Lantánido", "phase": "Sólido", "summary": "Usado en imanes de alto rendimiento y láseres.", "xpos": 12, "ypos": 9},
+      {"number": 67, "symbol": "Ho", "name": "Holmio", "atomic_mass": 164.93033, "category_en": "lanthanide", "category": "Lantánido", "phase": "Sólido", "summary": "Tiene la mayor fuerza magnética, usado en imanes.", "xpos": 13, "ypos": 9},
+      {"number": 68, "symbol": "Er", "name": "Erbio", "atomic_mass": 167.259, "category_en": "lanthanide", "category": "Lantánido", "phase": "Sólido", "summary": "Usado en amplificadores de fibra óptica y láseres (color rosa).", "xpos": 14, "ypos": 9},
+      {"number": 69, "symbol": "Tm", "name": "Tulio", "atomic_mass": 168.93422, "category_en": "lanthanide", "category": "Lantánido", "phase": "Sólido", "summary": "Lantánido estable más raro, usado en dispositivos de rayos X portátiles.", "xpos": 15, "ypos": 9},
+      {"number": 70, "symbol": "Yb", "name": "Iterbio", "atomic_mass": 173.054, "category_en": "lanthanide", "category": "Lantánido", "phase": "Sólido", "summary": "Usado en acero inoxidable y láseres de fibra.", "xpos": 16, "ypos": 9},
+      {"number": 71, "symbol": "Lu", "name": "Lutecio", "atomic_mass": 174.9668, "category_en": "lanthanide", "category": "Lantánido", "phase": "Sólido", "summary": "Último lantánido, usado en catalizadores y detectores PET.", "xpos": 17, "ypos": 9},
+      {"number": 72, "symbol": "Hf", "name": "Hafnio", "atomic_mass": 178.49, "category_en": "transition metal", "category": "Metal de transición", "phase": "Sólido", "summary": "Usado en barras de control nuclear y aleaciones.", "xpos": 4, "ypos": 6},
+      {"number": 73, "symbol": "Ta", "name": "Tántalo", "atomic_mass": 180.94788, "category_en": "transition metal", "category": "Metal de transición", "phase": "Sólido", "summary": "Metal resistente a la corrosión usado en electrónica (condensadores).", "xpos": 5, "ypos": 6},
+      {"number": 74, "symbol": "W", "name": "Wolframio", "atomic_mass": 183.84, "category_en": "transition metal", "category": "Metal de transición", "phase": "Sólido", "summary": "Mayor punto de fusión de todos los metales, usado en filamentos. También llamado Tungsteno.", "xpos": 6, "ypos": 6},
+      {"number": 75, "symbol": "Re", "name": "Renio", "atomic_mass": 186.207, "category_en": "transition metal", "category": "Metal de transición", "phase": "Sólido", "summary": "Metal raro usado en superaleaciones de alta temperatura.", "xpos": 7, "ypos": 6},
+      {"number": 76, "symbol": "Os", "name": "Osmio", "atomic_mass": 190.23, "category_en": "transition metal", "category": "Metal de transición", "phase": "Sólido", "summary": "Elemento natural más denso, usado en aleaciones.", "xpos": 8, "ypos": 6},
+      {"number": 77, "symbol": "Ir", "name": "Iridio", "atomic_mass": 192.217, "category_en": "transition metal", "category": "Metal de transición", "phase": "Sólido", "summary": "Metal muy denso y resistente a la corrosión, encontrado en meteoritos.", "xpos": 9, "ypos": 6},
+      {"number": 78, "symbol": "Pt", "name": "Platino", "atomic_mass": 195.084, "category_en": "transition metal", "category": "Metal de transición", "phase": "Sólido", "summary": "Metal precioso usado en joyería y catalizadores.", "xpos": 10, "ypos": 6},
+      {"number": 79, "symbol": "Au", "name": "Oro", "atomic_mass": 196.966569, "category_en": "transition metal", "category": "Metal de transición", "phase": "Sólido", "summary": "Metal precioso, muy valorado para joyería y reservas.", "xpos": 11, "ypos": 6},
+      {"number": 80, "symbol": "Hg", "name": "Mercurio", "atomic_mass": 200.592, "category_en": "transition metal", "category": "Metal de transición", "phase": "Líquido", "summary": "Único metal líquido a T amb., tóxico, usado en termómetros.", "xpos": 12, "ypos": 6},
+      {"number": 81, "symbol": "Tl", "name": "Talio", "atomic_mass": 204.38, "category_en": "post-transition metal", "category": "Metal postransicional", "phase": "Sólido", "summary": "Metal muy tóxico, antiguamente usado en raticidas.", "xpos": 13, "ypos": 6},
+      {"number": 82, "symbol": "Pb", "name": "Plomo", "atomic_mass": 207.2, "category_en": "post-transition metal", "category": "Metal postransicional", "phase": "Sólido", "summary": "Metal denso y tóxico, usado en baterías y blindaje contra radiación.", "xpos": 14, "ypos": 6},
+      {"number": 83, "symbol": "Bi", "name": "Bismuto", "atomic_mass": 208.98040, "category_en": "post-transition metal", "category": "Metal postransicional", "phase": "Sólido", "summary": "Metal pesado de baja toxicidad, usado en medicinas (Pepto-Bismol).", "xpos": 15, "ypos": 6},
+      {"number": 84, "symbol": "Po", "name": "Polonio", "atomic_mass": "[209]", "category_en": "post-transition metal", "category": "Metal postransicional", "phase": "Sólido", "summary": "Metaloide (o metal) altamente radiactivo.", "xpos": 16, "ypos": 6},
+      {"number": 85, "symbol": "At", "name": "Astato", "atomic_mass": "[210]", "category_en": "metalloid", "category": "Metaloide", "phase": "Sólido", "summary": "Elemento natural más raro, altamente radiactivo.", "xpos": 17, "ypos": 6},
+      {"number": 86, "symbol": "Rn", "name": "Radón", "atomic_mass": "[222]", "category_en": "noble gas", "category": "Gas noble", "phase": "Gas", "summary": "Gas noble radiactivo, peligro para la salud.", "xpos": 18, "ypos": 6},
+      {"number": 87, "symbol": "Fr", "name": "Francio", "atomic_mass": "[223]", "category_en": "alkali metal", "category": "Metal alcalino", "phase": "Sólido", "summary": "Elemento más electropositivo, altamente radiactivo.", "xpos": 1, "ypos": 7},
+      {"number": 88, "symbol": "Ra", "name": "Radio", "atomic_mass": "[226]", "category_en": "alkaline earth metal", "category": "Metal alcalinotérreo", "phase": "Sólido", "summary": "Metal radiactivo, antiguamente usado en pinturas luminiscentes.", "xpos": 2, "ypos": 7},
+      {"number": 89, "symbol": "Ac", "name": "Actinio", "atomic_mass": "[227]", "category_en": "actinide", "category": "Actínido", "phase": "Sólido", "summary": "Radiactivo, primero de la serie de los actínidos.", "xpos": 3, "ypos": 7},
+      {"number": 90, "symbol": "Th", "name": "Torio", "atomic_mass": 232.0377, "category_en": "actinide", "category": "Actínido", "phase": "Sólido", "summary": "Radiactivo, potencial combustible nuclear.", "xpos": 4, "ypos": 10},
+      {"number": 91, "symbol": "Pa", "name": "Protactinio", "atomic_mass": 231.03588, "category_en": "actinide", "category": "Actínido", "phase": "Sólido", "summary": "Actínido raro y altamente radiactivo.", "xpos": 5, "ypos": 10},
+      {"number": 92, "symbol": "U", "name": "Uranio", "atomic_mass": 238.02891, "category_en": "actinide", "category": "Actínido", "phase": "Sólido", "summary": "Combustible principal para reactores y armas nucleares.", "xpos": 6, "ypos": 10},
+      {"number": 93, "symbol": "Np", "name": "Neptunio", "atomic_mass": "[237]", "category_en": "actinide", "category": "Actínido", "phase": "Sólido", "summary": "Primer elemento transuránico, radiactivo.", "xpos": 7, "ypos": 10},
+      {"number": 94, "symbol": "Pu", "name": "Plutonio", "atomic_mass": "[244]", "category_en": "actinide", "category": "Actínido", "phase": "Sólido", "summary": "Elemento radiactivo usado en armas y reactores nucleares.", "xpos": 8, "ypos": 10},
+      {"number": 95, "symbol": "Am", "name": "Americio", "atomic_mass": "[243]", "category_en": "actinide", "category": "Actínido", "phase": "Sólido", "summary": "Metal radiactivo usado en detectores de humo.", "xpos": 9, "ypos": 10},
+      {"number": 96, "symbol": "Cm", "name": "Curio", "atomic_mass": "[247]", "category_en": "actinide", "category": "Actínido", "phase": "Sólido", "summary": "Metal radiactivo nombrado en honor a Marie y Pierre Curie.", "xpos": 10, "ypos": 10},
+      {"number": 97, "symbol": "Bk", "name": "Berkelio", "atomic_mass": "[247]", "category_en": "actinide", "category": "Actínido", "phase": "Sólido", "summary": "Elemento transuránico radiactivo.", "xpos": 11, "ypos": 10},
+      {"number": 98, "symbol": "Cf", "name": "Californio", "atomic_mass": "[251]", "category_en": "actinide", "category": "Actínido", "phase": "Sólido", "summary": "Fuerte emisor de neutrones, usado en arranque nuclear.", "xpos": 12, "ypos": 10},
+      {"number": 99, "symbol": "Es", "name": "Einstenio", "atomic_mass": "[252]", "category_en": "actinide", "category": "Actínido", "phase": "Sólido", "summary": "Elemento radiactivo nombrado en honor a Albert Einstein.", "xpos": 13, "ypos": 10},
+      {"number": 100, "symbol": "Fm", "name": "Fermio", "atomic_mass": "[257]", "category_en": "actinide", "category": "Actínido", "phase": "Sólido", "summary": "Elemento radiactivo nombrado en honor a Enrico Fermi.", "xpos": 14, "ypos": 10},
+      {"number": 101, "symbol": "Md", "name": "Mendelevio", "atomic_mass": "[258]", "category_en": "actinide", "category": "Actínido", "phase": "Sólido", "summary": "Elemento radiactivo nombrado en honor a Dmitri Mendeléyev.", "xpos": 15, "ypos": 10},
+      {"number": 102, "symbol": "No", "name": "Nobelio", "atomic_mass": "[259]", "category_en": "actinide", "category": "Actínido", "phase": "Sólido", "summary": "Elemento radiactivo nombrado en honor a Alfred Nobel.", "xpos": 16, "ypos": 10},
+      {"number": 103, "symbol": "Lr", "name": "Laurencio", "atomic_mass": "[262]", "category_en": "actinide", "category": "Actínido", "phase": "Sólido", "summary": "Último actínido, nombrado en honor a Ernest Lawrence.", "xpos": 17, "ypos": 10},
+      {"number": 104, "symbol": "Rf", "name": "Rutherfordio", "atomic_mass": "[267]", "category_en": "transition metal", "category": "Metal de transición", "phase": "Sólido", "summary": "Elemento sintético altamente radiactivo.", "xpos": 4, "ypos": 7},
+      {"number": 105, "symbol": "Db", "name": "Dubnio", "atomic_mass": "[268]", "category_en": "transition metal", "category": "Metal de transición", "phase": "Sólido", "summary": "Elemento sintético altamente radiactivo.", "xpos": 5, "ypos": 7},
+      {"number": 106, "symbol": "Sg", "name": "Seaborgio", "atomic_mass": "[271]", "category_en": "transition metal", "category": "Metal de transición", "phase": "Sólido", "summary": "Elemento sintético altamente radiactivo.", "xpos": 6, "ypos": 7},
+      {"number": 107, "symbol": "Bh", "name": "Bohrio", "atomic_mass": "[272]", "category_en": "transition metal", "category": "Metal de transición", "phase": "Sólido", "summary": "Elemento sintético altamente radiactivo.", "xpos": 7, "ypos": 7},
+      {"number": 108, "symbol": "Hs", "name": "Hasio", "atomic_mass": "[270]", "category_en": "transition metal", "category": "Metal de transición", "phase": "Sólido", "summary": "Elemento sintético altamente radiactivo.", "xpos": 8, "ypos": 7},
+      {"number": 109, "symbol": "Mt", "name": "Meitnerio", "atomic_mass": "[276]", "category_en": "unknown", "category": "Propiedades desconocidas", "phase": "Sólido", "summary": "Elemento sintético altamente radiactivo.", "xpos": 9, "ypos": 7},
+      {"number": 110, "symbol": "Ds", "name": "Darmstatio", "atomic_mass": "[281]", "category_en": "unknown", "category": "Propiedades desconocidas", "phase": "Sólido", "summary": "Elemento sintético altamente radiactivo.", "xpos": 10, "ypos": 7},
+      {"number": 111, "symbol": "Rg", "name": "Roentgenio", "atomic_mass": "[280]", "category_en": "unknown", "category": "Propiedades desconocidas", "phase": "Sólido", "summary": "Elemento sintético altamente radiactivo.", "xpos": 11, "ypos": 7},
+      {"number": 112, "symbol": "Cn", "name": "Copernicio", "atomic_mass": "[285]", "category_en": "transition metal", "category": "Metal de transición", "phase": "Gas", "summary": "Elemento sintético altamente radiactivo (fase predicha).", "xpos": 12, "ypos": 7},
+      {"number": 113, "symbol": "Nh", "name": "Nihonio", "atomic_mass": "[286]", "category_en": "unknown", "category": "Propiedades desconocidas", "phase": "Sólido", "summary": "Elemento sintético altamente radiactivo (fase predicha).", "xpos": 13, "ypos": 7},
+      {"number": 114, "symbol": "Fl", "name": "Flerovio", "atomic_mass": "[289]", "category_en": "post-transition metal", "category": "Metal postransicional", "phase": "Sólido", "summary": "Elemento sintético altamente radiactivo (propiedades predichas).", "xpos": 14, "ypos": 7},
+      {"number": 115, "symbol": "Mc", "name": "Moscovio", "atomic_mass": "[290]", "category_en": "unknown", "category": "Propiedades desconocidas", "phase": "Sólido", "summary": "Elemento sintético altamente radiactivo (fase predicha).", "xpos": 15, "ypos": 7},
+      {"number": 116, "symbol": "Lv", "name": "Livermorio", "atomic_mass": "[293]", "category_en": "unknown", "category": "Propiedades desconocidas", "phase": "Sólido", "summary": "Elemento sintético altamente radiactivo (fase predicha).", "xpos": 16, "ypos": 7},
+      {"number": 117, "symbol": "Ts", "name": "Teneso", "atomic_mass": "[294]", "category_en": "unknown", "category": "Propiedades desconocidas", "phase": "Sólido", "summary": "Elemento sintético altamente radiactivo (propiedades predichas).", "xpos": 17, "ypos": 7},
+      {"number": 118, "symbol": "Og", "name": "Oganesón", "atomic_mass": "[294]", "category_en": "unknown", "category": "Propiedades desconocidas", "phase": "Gas", "summary": "Elemento sintético altamente radiactivo, probablemente un gas noble (propiedades predichas).", "xpos": 18, "ypos": 7}
+    ];
+
+    const periodicTableContainer = document.getElementById('periodic-table');
+    const elementDetailsContainer = document.getElementById('element-details');
+    const defaultDetailText = '<p>Haz clic en un elemento para ver sus detalles.</p>';
+
+    function generatePeriodicTable() {
+        periodicTableContainer.innerHTML = '';
+        elementDetailsContainer.innerHTML = defaultDetailText;
+
+        elementsData.forEach(element => {
+            const elementDiv = document.createElement('div');
+            elementDiv.classList.add('element');
+
+            const categoryClass = element.category_en ? element.category_en.replace(/\s+/g, '-').toLowerCase() : 'unknown';
+            elementDiv.classList.add(categoryClass);
+
+            elementDiv.style.gridColumnStart = element.xpos;
+            elementDiv.style.gridRowStart = element.ypos;
+
+            let massDisplay = '';
+            if (element.atomic_mass) {
+                if (typeof element.atomic_mass === 'string' && element.atomic_mass.startsWith('[')) {
+                    massDisplay = element.atomic_mass;
+                } else if (typeof element.atomic_mass === 'number') {
+                   massDisplay = parseFloat(element.atomic_mass.toFixed(3));
+                } else {
+                    massDisplay = element.atomic_mass;
+                }
+            } else {
+                massDisplay = '---';
+            }
+
+            elementDiv.innerHTML = `
+                <div class="number">${element.number}</div>
+                <div class="symbol">${element.symbol}</div>
+                <div class="name">${element.name}</div>
+                <div class="mass">${massDisplay}</div>
+            `;
+
+            elementDiv.dataset.number = element.number;
+            elementDiv.dataset.name = element.name;
+            elementDiv.dataset.symbol = element.symbol;
+            elementDiv.dataset.atomic_mass = massDisplay;
+            elementDiv.dataset.category = element.category || 'Desconocida';
+            elementDiv.dataset.phase = element.phase || 'Desconocido';
+            elementDiv.dataset.summary = element.summary || 'No disponible.';
+
+            elementDiv.addEventListener('click', () => displayElementDetails(elementDiv));
+
+            periodicTableContainer.appendChild(elementDiv);
+        });
+    }
+
+    function displayElementDetails(elementDiv) {
+        const data = elementDiv.dataset;
+
+        elementDetailsContainer.innerHTML = `
+            <h2>${data.number}. ${data.name} (${data.symbol})</h2>
+            <p><span>Masa Atómica:</span> ${data.atomic_mass} ${String(data.atomic_mass).startsWith('[') ? '' : 'u'}</p>
+            <p><span>Categoría:</span> ${data.category}</p>
+            <p><span>Estado (estándar):</span> ${data.phase}</p>
+            <p><span>Resumen:</span> ${data.summary}</p>
+        `;
+
+        elementDetailsContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    document.addEventListener('DOMContentLoaded', generatePeriodicTable);
+
+</script>
+
+</body>
+</html>
