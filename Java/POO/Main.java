@@ -2,6 +2,7 @@
 Luis Javier Robles Topete
 No. control: 25460001
 */
+import java.io.File;
 import java.util.Scanner;
 public class Main{
     public static void main (String[]args){
@@ -28,6 +29,10 @@ public class Main{
             }
         }while(opc!=4);
         leer.close();
+
+        File archivo = new File("Prueba.txt");
+
+
     }
 
 }    
