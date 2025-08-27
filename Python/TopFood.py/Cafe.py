@@ -21,8 +21,9 @@ class Cafe(Alimento):
     def set_size(self, index: int) -> None:
         self.size = self.sizelist[index]
     
-    def get_costo(self) -> float:
-        nuevo_costo: float = super().get_costo()
+    @property
+    def costo(self) -> float:
+        nuevo_costo: float = super()._costo
         if self.leche == "Almendras":
             nuevo_costo += 10
         if self.size.lower() == "med":
