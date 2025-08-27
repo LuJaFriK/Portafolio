@@ -1,4 +1,5 @@
-import objeto
-objeto = objeto("Pedro",16)
-
+from objeto import Objeto
+objeto = Objeto("Pedro",16)
+objeto.nombre = "sexo"
+print(objeto.nombre)
 print(objeto)

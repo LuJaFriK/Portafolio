@@ -7,7 +7,7 @@ def leer_archivo(nombre):
     except FileNotFoundError:
         print("Nada, no hay, no existe")
     finally:
-        archio.close()
+        archivo.close()
     
 def escribir_archivo(nombre):
     archivo = open(nombre,"w")
