@@ -1,10 +1,8 @@
 package org.example;
 
 public class Nodo {
-    private int val; //Refiere al valor que almacena el nodo, por ejemplo arreglo[3] = 6;
-    private Nodo next; //Almacena literalmente al nodo siguiente
-
-    //Metodos irrelevantes
+    private int val;
+    private Nodo next;
 
     public Nodo(int valor){
         this.val = valor;
