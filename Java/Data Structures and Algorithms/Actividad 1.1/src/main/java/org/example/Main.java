@@ -6,7 +6,7 @@ import java.util.InputMismatchException;
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
     public static void main(String[] args) {
-        int[] arr = null;
+        int[] arr = new int[100];
         while (true){
             try{
                 switch (input("""
@@ -15,15 +15,15 @@ public class Main {
                 2.- Imprimir el arreglo
                 3.- Buscar un numero en el arreglo
                 4.- Eliminar un numero del arreglo
-                5.- Salir
-                """)){
+                5.- Consultar un espacio del arreglo
+                0.- Salir""")){
                     case 1:
-                        arr = randarray(100);
+                        randarray(arr);
                         break;
                     case 2:
                         for(int i=0;i<arr.length;i++){
-                            if(i!=arr.length-1) System.out.print(arr[i]+" ");
-                            else System.out.print(arr[i]+"\n");
+                            if(arr[i]==-1)break;
+                            System.out.print(arr[i]+" ");
                         }
                         break;
                     case 3:
@@ -36,6 +36,10 @@ public class Main {
                         remove(arr,input("Ingresa el numero a buscar:"));
                         break;
                     case 5:
+                        int posicion = input("Ingresa la posicion a consultar:");
+                        System.out.println("La posicion "+posicion+" contiene el valor "+arr[posicion]);
+                        break;
+                    case 0:
                         System.out.println("Saliendo...");
                         return;
                 }
@@ -48,31 +52,34 @@ public class Main {
     public static int[] randarray(int length){
         Random random = new Random();
         int[] arr = new int[length];
-        for(int i = 0;i<length;i++) {
-            arr[i] = random.nextInt(10001);
-        }
+        for(int i = 0;i<length;i++) arr[i] = random.nextInt(10001);
         return arr;
     }
 
-    public static int search(int[]arreglo,int busqueda){
-        int index = -1;
-        for(int i=0; (i < arreglo.length)&&(arreglo[i]!=-1);i++){
-            if(arreglo[i] == busqueda){
-                index = i;
+    public static void randarray(int[] arr){
+        for(int i = 0;i<arr.length;i++) arr[i] = (int) (Math.random()*10001);
+    }
+
+    public static int search(int[]arreglo,int busqueda) {
+        for (int i = 0; (i < arreglo.length) && (arreglo[i] != -1); i++) {
+            if (arreglo[i] == busqueda) return i;
+            else if (arreglo[i] == -1) {
+                System.out.println("Número no encontrado");
                 break;
             }
+
         }
-        if (index == -1) System.out.println("Número no encontrado");
-        return index;
+        return -1;
     }
 
     public static void remove(int[]arreglo, int numero){
         int index = search(arreglo,numero);
         if(index!=-1){
-            for(int i=index;i<arreglo.length-1;i++){
+            int i =0;
+            for(i=index;(i<arreglo.length-1)&&(arreglo[i]!=-1);i++){
                 arreglo[i] = arreglo[i+1];
             }
-            arreglo[arreglo.length-1] = -1;
+            arreglo[i] = -1;
         }
     }
 
@@ -81,7 +88,7 @@ public class Main {
         int scanned;
         while (true) {
             try {
-                System.out.print(mensaje);
+                System.out.println(mensaje);
                 scanned = scanner.nextInt();
                 break;
             } catch (InputMismatchException ex) {

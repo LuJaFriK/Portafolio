@@ -16,8 +16,8 @@ def remove(arreglo,busqueda:int):
         arreglo[-1] = -1
         print("Elemento eliminado exitosamente.")
 
-def randarray(length:int):
-    return array([randint(1,100000) for i in range (length)])
+def randarray(array, length:int):
+    array = array([randint(1,100000) for i in range (length)])
 
 class act:
     def __init__(self):
@@ -32,7 +32,7 @@ Ingresa una de las siguientes opciones:
 5.- Salir
                 """)):
                 case 1:
-                    arr = randarray(100)
+                    randarray(arr, 100)
                     print("Arreglo creado exitosamente.")
                 case 2:
                     print(arr)
