@@ -8,6 +8,11 @@ public class Nodo {
         this.val = valor;
         this.next = null;
     }
+
+    public Nodo(){
+
+    }
+
     public Nodo getNext() {
         return next;
     }

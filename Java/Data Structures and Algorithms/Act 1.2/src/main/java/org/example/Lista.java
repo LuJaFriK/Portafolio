@@ -1,12 +1,69 @@
 package org.example;
 import java.util.Scanner;
 import java.util.InputMismatchException;
-public class Main {
+public class Lista {
+    private Nodo head;
+
+    public Lista (){
+    }
+
+    public Nodo randomLinkedList(int length){
+        this.head = new Nodo((int)(Math.random()*10000)+1);
+        Nodo current = this.head;
+        for (int i=0;i<length-1;i++){
+            current.setNext(new Nodo((int)(Math.random()*10000)+1));
+            current = current.getNext();
+        }
+        return head;
+    }
+
+    public int searchNode(int value){
+        Nodo current = this.head;
+        for (int index=0;current!=null;index++){
+            if (current.getVal()==value) return index;
+            else current = current.getNext();
+    }
+        return -1;
+    }
+
+    public void deleteNode(int value){
+        if (this.head.getVal()==value){
+            this.head = this.head.getNext();
+            return;
+        }
+        Nodo current = this.head;
+        while(current.getNext()!=null){
+            if (current.getNext().getVal()==value){
+                current.setNext(current.getNext().getNext());
+                return;
+            }
+            current = current.getNext();
+        }
+        System.out.println("El valor no fue encontrado.");
+    }
+
+    public int searchIndex(int index){
+        Nodo current = this.head;
+        for(int i=0;current!=null;i++){
+            if(i==index) return current.getVal();
+            current = current.getNext();
+        }
+        return -1;
+    }
+    public void printList(){
+        Nodo current = this.head;
+        while(current != null){
+            System.out.println(current.getVal());
+            current = current.getNext();
+        }
+    }
+}
+
+class Main{
     public static void main(String[] args) {
         int index;
         boolean found;
-        Nodo list = null;
-        Nodo iterationNode;
+        Lista list = new Lista();
         while(true){
             try{
                 switch (input("""
@@ -18,26 +75,23 @@ public class Main {
                 5.- Consultar un espacio del arreglo
                 0.- Salir""")){
                     case 1:
-                        list = randomLinkedList(input("Numero de nodos a crear:"));
+                        list.
+                                randomLinkedList(input("Numero de nodos a crear:"));
                         break;
                     case 2:
-                        iterationNode = list;
-                        while(iterationNode!=null){
-                            System.out.println(iterationNode.getVal());
-                            iterationNode = iterationNode.getNext();
-                        }
+                        list.printList();
                         break;
                     case 3:
-                        index = searchNode(list,input("Ingrese el numero a buscar:"));
+                        index = list.searchNode(input("Ingrese el numero a buscar:"));
                         found = index!=-1;
                         System.out.println(found ? "El numero fue encontrado en el indice "+index : "El numero no fue encontrado.");//Altamente recomendado usar el operador ? para imprimir segun booleanos
                         break;
                     case 4:
-                        deleteNode(list,input("Ingrese el numero a eliminar:"));
+                        list.deleteNode(input("Ingrese el numero a eliminar:"));
                         break;
                     case 5:
                         index = input("Ingresa el indice a mostrar:");
-                        int value = searchIndex(list,index);
+                        int value = list.searchIndex(index);
                         found = value != -1;
                         System.out.println(found ? "El valor de la lista en la posicion "+index+" es "+value:"El indice es mayor a la longitud de la lista.");
 
@@ -51,57 +105,13 @@ public class Main {
             }
         }
     }
-    public static Nodo randomLinkedList(int length){
-        Nodo head = new Nodo((int)(Math.random()*10001));
-        Nodo tempnode = head;
-        for (int i=0;i<length-1;i++){
-            tempnode.setNext(new Nodo((int)(Math.random()*10000)+1));
-            tempnode = tempnode.getNext();
-        }
-        return head;
-    }
-
-    public static int searchNode(Nodo head,int value){
-        Nodo current = head;
-        for (int index=0;current!=null;index++){
-            if (current.getVal()==value) return index;
-            else current = current.getNext();
-    }
-        return -1;
-    }
-
-    public static void deleteNode(Nodo head,int value){
-        if (head.getVal()==value){
-            head = head.getNext();
-            return;
-        }
-        Nodo current = head;
-        while(current.getNext()!=null){
-            if (current.getNext().getVal()==value){
-                current.setNext(current.getNext().getNext());
-                return;
-            }
-            current = current.getNext();
-        }
-        System.out.println("El valor no fue encontrado.");
-    }
-
-    public static int searchIndex(Nodo head, int index){
-        Nodo current = head;
-        for(int i=0;current!=null;i++){
-            if(i==index) return current.getVal();
-            current = current.getNext();
-        }
-        return -1;
-    }
-
     public static int input(String mensaje) {
         /*
-        * El metodo input es un reemplazo al scanner.nextInt
-        * Elimina la redundancia, mejora la legibilidad del codigo
-        * Y trabaja las Excepciones de tipado
-        * NO REPLICAR EN SU COPIA DEL CODIGO
-        * */
+         * El metodo input es un reemplazo al scanner.nextInt
+         * Elimina la redundancia, mejora la legibilidad del codigo
+         * Y trabaja las Excepciones de tipado
+         * NO REPLICAR EN SU COPIA DEL CODIGO
+         * */
         Scanner scanner = new Scanner(System.in);
         int scanned;
         while (true) {
@@ -121,7 +131,6 @@ public class Main {
         }
         return scanned;
     }
-
 }
 
 
