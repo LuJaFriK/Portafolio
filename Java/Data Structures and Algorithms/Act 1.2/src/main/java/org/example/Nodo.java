@@ -4,14 +4,12 @@ public class Nodo {
     private int val;
     private Nodo next;
 
-    public Nodo(int valor){
+    public Nodo(int valor, Nodo next){
         this.val = valor;
-        this.next = null;
+        this.next = next;
     }
 
-    public Nodo(){
-
-    }
+    public Nodo(){}
 
     public Nodo getNext() {
         return next;
