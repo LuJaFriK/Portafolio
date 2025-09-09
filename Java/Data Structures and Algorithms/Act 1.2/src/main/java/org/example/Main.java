@@ -6,8 +6,10 @@ import java.util.Scanner;
 class Main{
     public static void main(String[] args) {
         int index;
+        short[] a = {1,2,3,4};
+        int i = a.length;
         boolean found;
-        Lista list = new Lista();
+        var list = new Lista();
         while(true){
             try{
                 switch (input("""
@@ -19,11 +21,13 @@ class Main{
                 5.- Consultar un espacio del arreglo
                 0.- Salir""")){
                     case 1:
-                        list.
-                                randomLinkedList(input("Numero de nodos a crear:"));
+                        list.randomLinkedList(
+                                100
+                                //input("Numero de nodos a crear:")
+                        );
                         break;
                     case 2:
-                        list.printList();
+                        System.out.println(list);
                         break;
                     case 3:
                         index = list.searchNode(input("Ingrese el numero a buscar:"));
@@ -38,7 +42,6 @@ class Main{
                         int value = list.searchIndex(index);
                         found = value != -1;
                         System.out.println(found ? "El valor de la lista en la posicion "+index+" es "+value:"El indice es mayor a la longitud de la lista.");
-
                         break;
                     case 0:
                         System.out.println("Saliendo...");
@@ -50,29 +53,23 @@ class Main{
         }
     }
     public static int input(String mensaje) {
-        /*
-         * El metodo input es un reemplazo al scanner.nextInt
-         * Elimina la redundancia, mejora la legibilidad del codigo
-         * Y trabaja las Excepciones de tipado
-         * NO REPLICAR EN SU COPIA DEL CODIGO
-         * */
-        Scanner scanner = new Scanner(System.in);
-        int scanned;
+        var sc = new Scanner(System.in);
+        int value;
         while (true) {
             try {
                 System.out.println(mensaje);
-                scanned = scanner.nextInt();
+                value = sc.nextInt();
                 break;
             } catch (InputMismatchException ex) {
                 System.out.println("Error. Caracteres introducidos no válidos. Intente nuevamente.");
-                scanner.nextLine();
+                sc.nextLine();
                 try {
-                    Thread.sleep(2000);
+                    Thread.sleep(1500);
                 } catch (InterruptedException e) {
                     System.out.println("La espera fue interrumpida.");
                 }
             }
         }
-        return scanned;
+        return value;
     }
 }
