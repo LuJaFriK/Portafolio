@@ -37,7 +37,7 @@ def login(meseros: dict) -> Optional[Mesero]:
     
 def crear_mesero(meseros: dict) -> None:
         while True:
-            index = int(input("Ingresa el codigo del nuevo mesero: "))
+            index: int = int(input("Ingresa el codigo del nuevo mesero: "))
             if index in meseros:
                 print("Codigo ya registrado.")
             else: 

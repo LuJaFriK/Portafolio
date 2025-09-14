@@ -1,4 +1,4 @@
-class Nodo:
+class __Nodo:
     def __init__(self,next, value: int = 0):
         self.value = value
         self.next = next
@@ -14,7 +14,7 @@ class Lista:
                 self.__head = Nodo(self.__head, randint(0, 10000))
 
     def add_nodo(self, val):
-        new_nodo = Nodo(val)
+        new_nodo = Nodo(None,val)
         if self.__head is None:
             self.__head = new_nodo
             return
@@ -82,3 +82,10 @@ if found_node:
     print(f"Si se solicita el indice {index_to_search}, se retorna el nodo con valor {found_node.value}")
 else:
     print(f"No se encontró un nodo en el índice {index_to_search}")
+
+valor = 0
+print(valor)
+valor = "0"
+print(valor)
+valor = False
+print(valor)
