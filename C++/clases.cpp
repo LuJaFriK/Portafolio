@@ -1,6 +1,6 @@
 #include <iostream>
 #include <vector>
-
+//Ayuda a definir una plantilla para la clase en concreto
 template <typename var>
 class Pila {
     private:
@@ -10,15 +10,15 @@ class Pila {
         Pila(int size): SP(0) ,Data(size){
         }
         //retorna si la Pila está vacia
-        bool empty(){
+        bool empty()const{
             return (SP==0);
         }
         //retorna si la pila está llena
-        bool full(){
+        bool full()const{
             return (SP==Data.size());
         }
         //retorna el objeto en la cabecera
-        var pull(){
+        var pull()const{
             if(!empty()) return Data[SP];
             else throw std::out_of_range("Error: La pila está vacía.");
         }
