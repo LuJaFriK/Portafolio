@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cstdlib>
 
 template <typename var>
 //var representa la clase del valor
@@ -14,18 +15,44 @@ class Linkedlist{
     Nodo* head;
     // largo de la lista
     int length;
-
+    //Verifica si la lista esta vacia
     bool empty(){
-        return length>0;
+        return !(length>0);
+    }
+
+    int randomval(){
+        
     }
 
     public:
+    //Constructor
         Linkedlist(){
             head = nullptr;
             length = 0;
         }
+    //Destructor
+        ~Linkedlist(){
+            Nodo* current;
+            //ciclo que reinicia la cuenta hasta eliminar todos los nodos
+            while(head!=nullptr){
+                current = head;
+                //ciclo anidado que recorre la lista
+                while (current!=nullptr) {
+                    current = current->next;
+                }
+                delete current;
+            }
+        }
+
+        int size() const{
+            return length;
+        }
+
+        void randomLinkedList(){
+            
+        }
         
-        void append(const var& value){
+        void add(const var& value){
             //Crea un nodo nuevo
             Nodo* new_head = new Nodo();
             //Agrega los valores correspondienes
@@ -76,7 +103,7 @@ class Linkedlist{
             return deleted_value;
         }
 
-        void remove(const int& val){
+        void remove(const var& val){
             //Valida que la lista no esté vacia
             if (empty()) throw std::out_of_range("Error: La lista está vacía.");
             //Crea los apuntadores
@@ -107,6 +134,32 @@ class Linkedlist{
                 //Si la condición no se cumple, continua buscando
                 current = current->next;
             }
+        }
+        
+
+        int search(const var& val){
+            //Valida que la lista no esté vacia
+            if (empty()) throw std::out_of_range("Error: La lista está vacía.");
+            //Crea el puntero
+            Nodo* current = head;
+            //Ciclo que itera la lista
+            for(int i=0;current!=nullptr;i++){
+                //Si el nodo contiene el valor buscado, retorna el indice
+                if(current->value==val){
+                    return i;
+                }
+                current = current->next;
+            }
+            //Si no lo encuentra, retorna un indice invalido
+            return -1;
+        }
+
+        var searchindex(const int& index){
+            //valida primero que el indice exista
+            if(index>length) throw std::out_of_range("Error: El indice está fuera de los límites.");
+            Nodo* current;
+            for(int i=0;i<=index;i++) current = current->next;
+            return current->value;
         }
 
 
