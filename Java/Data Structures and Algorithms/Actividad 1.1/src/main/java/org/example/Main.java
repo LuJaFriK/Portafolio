@@ -5,6 +5,7 @@ import java.util.InputMismatchException;
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
+    /* 
     public static void main(String[] args) {
         int[] arr = new int[100];
         while (true){
@@ -48,6 +49,71 @@ public class Main {
             }
         }
     }
+
+    Descomentar para usar
+
+    */
+
+    public static void test(){
+
+        //Paso 1: Crear el arreglo
+        int[] arreglo;
+        //Paso 2: Crear 50000 espacios
+        arreglo = randarray(50000);
+        //Paso 3: Imprimir el arreglo
+        printarray(arreglo);
+        //Paso 4: metodo de busqueda
+        System.out.println(search(arreglo, 6789));    
+        //Paso 5: Buscar valor
+        int val = arreglo[67];
+        System.out.println(val);
+        
+        //Paso 6: Eliminar valor
+        remove(arreglo, val);
+        
+        //Paso 7: Reimprimir lista
+        printarray(arreglo);
+
+
+    }
+
+    public static void main(String[] args) {
+        Runtime runtime = Runtime.getRuntime();
+
+        // Medir memoria inicial
+        runtime.gc();
+        long memoriaInicial = runtime.totalMemory() - runtime.freeMemory();
+
+        // Medir tiempo inicial
+        long inicio = System.nanoTime();
+
+        // Código a medir
+        test();
+
+        // Medir tiempo final
+        long fin = System.nanoTime();
+        long tiempoEjecucion = fin - inicio;
+
+        // Medir memoria final
+        runtime.gc();
+        long memoriaFinal = runtime.totalMemory() - runtime.freeMemory();
+
+        // Resultados
+        System.out.println("Tiempo de ejecución: " + tiempoEjecucion / 1_000_000.0 + " ms");
+        // Para medir en Bytes, simplemente no dividas por 1024*1024.
+        // La diferencia 'memoriaFinal - memoriaInicial' ya está en Bytes.
+        System.out.println("Memoria usada: " + (memoriaFinal - memoriaInicial) + " Bytes");
+    }
+
+    public static void printarray(int[]arr){
+        System.out.print('[');
+        for (int i=0;i<arr.length;i++){
+            System.out.print(arr[i]);
+            if(arr[i]+1 != 0) System.out.print(',');
+        }
+        System.out.println(']');
+    }
+
 
     public static int[] randarray(int length){
         Random random = new Random();

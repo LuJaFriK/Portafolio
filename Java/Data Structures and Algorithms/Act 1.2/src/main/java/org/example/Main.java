@@ -4,10 +4,9 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 class Main{
+    /* 
     public static void main(String[] args) {
         int index;
-        short[] a = {1,2,3,4};
-        int i = a.length;
         boolean found;
         var list = new Lista();
         while(true){
@@ -72,4 +71,64 @@ class Main{
         }
         return value;
     }
+
+
+    Descomentar para su uso
+
+
+    */
+    public static void test(){
+
+        //Paso 1: Crear lista
+        Lista list = new Lista();
+
+        //Paso 2: Crear 50000 nodos 
+        list.randomLinkedList(50000);
+        
+        //Paso 3: imprimir lista
+        System.out.println(list);
+        
+        //Paso 4: metodo de busqueda
+        System.out.println(list.searchNode(6789));
+        
+        //Paso 5: Buscar valor
+        int value = list.searchIndex(67);
+        System.out.println(value);
+        
+        //Paso 6: Eliminar valor
+        list.deleteNode(value);
+        
+        //Paso 7: Reimprimir lista
+        System.out.println(list);
+
+    }
+
+    public static void main(String[] args) {
+        Runtime runtime = Runtime.getRuntime();
+
+        // Medir memoria inicial
+        runtime.gc();
+        long memoriaInicial = runtime.totalMemory() - runtime.freeMemory();
+
+        // Medir tiempo inicial
+        long inicio = System.nanoTime();
+
+        // Código a medir
+        test();
+
+        // Medir tiempo final
+        long fin = System.nanoTime();
+        long tiempoEjecucion = fin - inicio;
+
+        // Medir memoria final
+        runtime.gc();
+        long memoriaFinal = runtime.totalMemory() - runtime.freeMemory();
+
+        // Resultados
+        System.out.println("Tiempo de ejecución: " + tiempoEjecucion / 1_000_000.0 + " ms");
+        // Para medir en Bytes, simplemente no dividas por 1024*1024.
+        // La diferencia 'memoriaFinal - memoriaInicial' ya está en Bytes.
+        System.out.println("Memoria usada: " + (memoriaFinal - memoriaInicial) + " Bytes");
+    }
+
 }

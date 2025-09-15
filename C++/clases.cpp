@@ -1,21 +1,29 @@
 #include <iostream>
-#include <vector>
+#include <random>
 //Ayuda a definir una plantilla para la clase en concreto
 template <typename var>
 class Pila {
     private:
         int SP;
-        std::vector<var> Data;
+        var* Data;
+        int capacity;
+
     public:
-        Pila(int size): SP(0) ,Data(size){
+        Pila(int size): SP(0), capacity(size){
+            Data = new var[size];
         }
+
+        ~Pila(){
+            delete[] Data;
+        }
+
         //retorna si la Pila está vacia
         bool empty()const{
             return (SP==0);
         }
         //retorna si la pila está llena
         bool full()const{
-            return (SP==Data.size());
+            return (SP==capacity);
         }
         //retorna el objeto en la cabecera
         var pull()const{
@@ -43,34 +51,58 @@ class Pila {
         }
         //retorna la cantidad de espacios disponibles en la pila
         int availible() const{
-            return (Data.size() - SP);
+            return (capacity - SP);
         }
         //retorna el largo de la pila
         int size() const{
-            return (Data.size());
+            return (capacity);
         }
         //imprimir la pila
         void print(){
-            std::cout<<'[';
-            for (int i=SP-1;i>=0;i--){
-                std::cout<<Data[i];
-                if (i>0) std::cout<<',';
+            std::cout<<"[";
+            for (int i=0; i < SP; i++){
+                std::cout<< Data[i];
+                if (i < SP - 1) std::cout<<",";
             }
-            std::cout<<']'<<std::endl;
+            std::cout<<"]"<<std::endl;
         }
 };
 
-int main(){
-    //Declarar una pila
-    Pila<int> pila(6);
+void test(){
 
-    //Llenar los datos de de pila
-    for(int i=0;i<pila.size();i++){
-        pila.push(i);
+        //Paso 1: Crear pila
+        Pila<int>* pila;
+
+        //Paso 2: Crear 50000 espacios
+        pila = new Pila<int>(5000);
+        
+        //Paso 3: imprimir lista
+        pila->print();
+        
+        //Paso 4: metodo de busqueda
+        System.out.println(list.searchNode(6789));
+        
+        //Paso 5: Buscar valor
+        int value = list.searchIndex(67);
+        System.out.println(value);
+        
+        //Paso 6: Eliminar valor
+        list.deleteNode(value);
+        
+        //Paso 7: Reimprimir lista
+        System.out.println(list);
+
+}
+
+int search(Pila<int>& pila, const int& value){
+    while(pila.pull()!=nullptr){
+        
     }
-    pila.print();
-    //Consultar si la pila está llena
-    std::cout << (pila.full() ? "La pila está llena" : "La pila no está llena") << std::endl;
-    std::cout << pila.availible() << std::endl;
+
+}
+
+int main(){
+    test();
     return 0;
 }
+

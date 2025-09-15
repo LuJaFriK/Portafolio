@@ -1,5 +1,6 @@
 #include <iostream>
-#include <cstdlib>
+#include <string>
+#include <random>
 
 template <typename var>
 //var representa la clase del valor
@@ -19,9 +20,12 @@ class Linkedlist{
     bool empty(){
         return !(length>0);
     }
-
-    int randomval(){
-        
+    //Genera un numero aleatorio
+    int randomval() const {
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> dis(1, 10000);
+    return dis(gen);
     }
 
     public:
@@ -48,8 +52,18 @@ class Linkedlist{
             return length;
         }
 
-        void randomLinkedList(){
-            
+        void random_linked_list(const int& length){
+            //Ciclo que crea todos los nodos solicitados
+            for (int i=0;i<length;i++) {
+                //Inicializa un nuevo nodo
+                Nodo* nodo = new Nodo();
+                //Asigna un valor aleatorio
+                nodo->value = randomval();
+                //Asigna el nuevo nodo como la actual cabecera
+                nodo->next = head;
+                //Redirecciona el puntero de la cabecera a la nueva cabecera
+                head = nodo;
+            }
         }
         
         void add(const var& value){
@@ -154,16 +168,27 @@ class Linkedlist{
             return -1;
         }
 
-        var searchindex(const int& index){
+        var search_index(const int& index){
             //valida primero que el indice exista
             if(index>length) throw std::out_of_range("Error: El indice está fuera de los límites.");
             Nodo* current;
             for(int i=0;i<=index;i++) current = current->next;
             return current->value;
-        }
-
-
-
-
-    
+        }    
 };
+
+int menu(){
+    std::cout<< "Ingresa una de las siguientes opciones:" << std::endl;
+    std::cout<< "1.- Crear una lista enlazada con valores aleatorios" << std::endl;
+    std::cout<< "2.- Imprimir la lista" << std::endl;
+    std::cout<< "3.- Buscar un numero en la lista" << std::endl;
+    std::cout<< "4.- Eliminar un numero de la lista" << std::endl;
+    std::cout<< "5.- Consultar un espacio del arreglo" << std::endl;
+    std::cout<< "0.- Salir" << std::endl;
+}
+
+int main(){
+
+    return 0;
+}
+
