@@ -92,7 +92,7 @@ class Main{
         System.out.println(list.searchNode(6789));
         
         //Paso 5: Buscar valor
-        int value = list.searchIndex(67);
+        int value = list.get(67);
         System.out.println(value);
         
         //Paso 6: Eliminar valor

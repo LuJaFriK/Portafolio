@@ -1,4 +1,5 @@
 package org.example;
+/* 
 public class Lista {
     private Nodo head;
 
@@ -36,7 +37,7 @@ public class Lista {
         System.out.println("El valor no fue encontrado.");
     }
 
-    public int searchIndex(int index){
+    public int get(int index){
         var current = this.head;
         for(int i=1;current!=null;i++){
             if(i==index) return current.getVal();
@@ -63,7 +64,7 @@ public class Lista {
     * Clase Nodo encapsulada dentro de la clase lista porque no necesita ser utilizada en otro sitio
     *
     *
-    * */
+    * 
 
     private class Nodo {
         private int val;
@@ -99,5 +100,86 @@ public class Lista {
     }
 
 }
+*/
+import java.util.concurrent.ThreadLocalRandom;
 
+public class Lista {
+    private Nodo head;
+
+    public Lista() {
+        this.head = null;
+    }
+
+    public void randomLinkedList(int length) {
+        for (int i = 0; i < length; i++) {
+            head = new Nodo(ThreadLocalRandom.current().nextInt(1, 10001), head);
+        }
+    }
+
+    public int searchNode(int value) {
+        Nodo current = head;
+        int index = 1;
+        while (current != null) {
+            if (current.val == value) return index;
+            current = current.next;
+            index++;
+        }
+        return -1;
+    }
+
+    public void deleteNode(int value) {
+        if (head == null) return;
+
+        if (head.val == value) {
+            head = head.next;
+            return;
+        }
+
+        Nodo current = head;
+        while (current.next != null) {
+            if (current.next.val == value) {
+                current.next = current.next.next;
+                return;
+            }
+            current = current.next;
+        }
+        System.out.println("El valor no fue encontrado.");
+    }
+
+    public int get(int index) {
+        Nodo current = head;
+        int i = 1;
+        while (current != null) {
+            if (i == index) return current.val;
+            current = current.next;
+            i++;
+        }
+        return -1;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("[");
+        Nodo current = head;
+        int i = 1;
+        while (current != null) {
+            sb.append(i).append(". ").append(current.val);
+            current = current.next;
+            if (current != null) sb.append(", ");
+            i++;
+        }
+        return sb.append("]").toString();
+    }
+
+    /** Nodo optimizado, estático y sin métodos sobrantes */
+    private static class Nodo {
+        int val;
+        Nodo next;
+
+        Nodo(int val, Nodo next) {
+            this.val = val;
+            this.next = next;
+        }
+    }
+}
 
