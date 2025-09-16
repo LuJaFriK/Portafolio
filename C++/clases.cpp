@@ -1,16 +1,15 @@
 #include <iostream>
 #include <random>
 //Ayuda a definir una plantilla para la clase en concreto
-template <typename var>
 class Pila {
     private:
         int SP;
-        var* Data;
+        int* Data;
         int capacity;
 
     public:
         Pila(int size): SP(0), capacity(size){
-            Data = new var[size];
+            Data = new int[size];
         }
 
         ~Pila(){
@@ -26,12 +25,12 @@ class Pila {
             return (SP==capacity);
         }
         //retorna el objeto en la cabecera
-        var pull()const{
-            if(!empty()) return Data[SP];
+        int pull()const{
+            if(!empty()) return Data[SP-1]; // CORREGIDO: SP -> SP-1
             else throw std::out_of_range("Error: La pila está vacía.");
         }
         //ingresa un nuevo dato
-        void push(const var& dato){
+        void push(const int dato){
             if (!full()){
                 Data[SP] = dato;
                 SP++;
@@ -40,13 +39,13 @@ class Pila {
             }
         }
         //Elimina y retorna un dato de la pila
-        var pop(){
+        int pop(){
             if(!empty()){
-                var deleted = Data[SP-1];
+                int deleted = Data[SP-1];
                 SP--;
                 return deleted;
             }else{
-                throw std::out_of_range("Error: La pila está llena.");
+                throw std::out_of_range("Error: La pila está vacía.");
             }
         }
         //retorna la cantidad de espacios disponibles en la pila
@@ -57,6 +56,7 @@ class Pila {
         int size() const{
             return (capacity);
         }
+
         //imprimir la pila
         void print(){
             std::cout<<"[";
@@ -66,40 +66,58 @@ class Pila {
             }
             std::cout<<"]"<<std::endl;
         }
+
+        int get(const int index)const{
+            if (index>=capacity) return -1;
+            return (Data[index]);
+        }
+
+        int search(const int value)const{
+            for(int i=0;i<capacity;i++){
+                if (Data[i]==value) return (Data[i]);
+            }
+            return -1;
+        }
 };
+
+int randomval() {
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> dis(1, 10000);
+    return dis(gen);
+}
 
 void test(){
 
-        //Paso 1: Crear pila
-        Pila<int>* pila;
+    //Paso 1: Crear pila
+    Pila* pila;
 
-        //Paso 2: Crear 50000 espacios
-        pila = new Pila<int>(5000);
+    //Paso 2: Crear 50000 espacios
+    pila = new Pila(50000);
+    for(int i=0;i<(pila->size());i++) pila->push(randomval());
         
-        //Paso 3: imprimir lista
-        pila->print();
+    //Paso 3: imprimir lista
+    pila->print();
         
-        //Paso 4: metodo de busqueda
-        System.out.println(list.searchNode(6789));
+    //Paso 4: metodo de busqueda
+    int index = pila->search(3685);
+    std::cout << index << std::endl;
         
-        //Paso 5: Buscar valor
-        int value = list.searchIndex(67);
-        System.out.println(value);
+    //Paso 5: Buscar valor
+    int value = pila->get(49967);    //int value = searchindex(pila, 67);
+    std::cout << value << std::endl;
         
-        //Paso 6: Eliminar valor
-        list.deleteNode(value);
-        
-        //Paso 7: Reimprimir lista
-        System.out.println(list);
-
-}
-
-int search(Pila<int>& pila, const int& value){
-    while(pila.pull()!=nullptr){
-        
-    }
+    //Paso 6: Eliminar valores hasta llegar al valor en el indice 67 de adelante para atras
+    int del = -1;
+    do{
+        del = pila->pop();
+    }while(del!=value);        
+    //Paso 7: Reimprimir lista
+    pila->print();
 
 }
+
+
 
 int main(){
     test();
