@@ -101,8 +101,6 @@ public class Lista {
 
 }
 */
-import java.util.concurrent.ThreadLocalRandom;
-
 public class Lista {
     private Nodo head;
 
@@ -110,9 +108,13 @@ public class Lista {
         this.head = null;
     }
 
+    public void add(int value){
+         head = new Nodo(value, head);
+    }
+
     public void randomLinkedList(int length) {
         for (int i = 0; i < length; i++) {
-            head = new Nodo(ThreadLocalRandom.current().nextInt(1, 10001), head);
+            head = new Nodo((int)(Math.random()*10000+1), head);
         }
     }
 
@@ -170,6 +172,21 @@ public class Lista {
         }
         return sb.append("]").toString();
     }
+    /*
+    
+    Es mejor usar toString que un metodo tipo print, 50% mas veloz
+
+    public void print(){
+        System.out.print('[');
+        Nodo current = head;
+        int i=0;
+        while (current!=null) {
+            System.out.print(i+". "+current.val);
+            current = current.next;i++;
+            if(current!=null) System.out.print(',');
+        }
+        System.out.println(']');
+    }*/
 
     /** Nodo optimizado, estático y sin métodos sobrantes */
     private static class Nodo {

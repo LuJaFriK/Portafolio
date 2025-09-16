@@ -1,4 +1,5 @@
 #include <iostream>
+#include <string>
 #include <random>
 #include <fstream>
 #include <sstream>
@@ -133,19 +134,49 @@ class Linkedlist{
             }
             std::cout << "]\n";
         }
+
+        std::string toString() {
+            std::string lista = "";
+            Nodo* current = head;
+            
+            // Si la lista está vacía, devolver "[]"
+            if (current == nullptr) {
+                return "[]";
+            }
+            
+            // Empezar con el corchete inicial
+            lista += "[";
+            
+            // Recorrer la lista
+            while (current != nullptr) {
+                // Agregar el valor del nodo actual
+                lista += std::to_string(current->value); // Convierte el valor a string si no lo es
+                // Si hay un nodo siguiente, agregar una coma y espacio
+                if (current->next != nullptr) {
+                    lista += ", ";
+                }
+                current = current->next; // Avanzar al siguiente nodo
+            }
+            
+            // Cerrar el corchete
+            lista += "]";
+            return lista;
+        }
+
 };
 
 
 
 void test(){
-    //Paso 1: Crear pila
+    //Paso 1: Crear lista
     Linkedlist* lista = new Linkedlist();
 
     //Paso 2: Crear 50000 espacios
     lista->random_linked_list(50000);
         
     //Paso 3: imprimir lista
-    lista->print();
+    //lista->print();
+    std::cout << lista->toString() << std::endl;
         
     //Paso 4: metodo de busqueda
     int index = lista->search(6789);
@@ -158,7 +189,8 @@ void test(){
     //Paso 6: Eliminar el valor en el indice 47
      lista->remove(value);
     //Paso 7: Reimprimir lista
-    lista->print();
+    //lista->print();
+    std::cout << lista->toString() << std::endl;
 }
 
 long getMemoryUsage() {
