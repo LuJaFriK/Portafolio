@@ -7,7 +7,6 @@
 #include <cstdlib> // Para getpid() en Unix/Linux
 
 
-//var representa la clase del valor
 class Linkedlist{
     private:
 
@@ -175,8 +174,8 @@ void test(){
     lista->random_linked_list(50000);
         
     //Paso 3: imprimir lista
-    //lista->print();
-    std::cout << lista->toString() << std::endl;
+    lista->print();
+    //std::cout << lista->toString() << std::endl;
         
     //Paso 4: metodo de busqueda
     int index = lista->search(6789);
@@ -189,8 +188,8 @@ void test(){
     //Paso 6: Eliminar el valor en el indice 47
      lista->remove(value);
     //Paso 7: Reimprimir lista
-    //lista->print();
-    std::cout << lista->toString() << std::endl;
+    lista->print();
+    //std::cout << lista->toString() << std::endl;
 }
 
 long getMemoryUsage() {
