@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": false,
-      "cwd": "/home/lujafrik/Documentos/GitHub/Portafolio/C++",
-      "program": "/home/lujafrik/Documentos/GitHub/Portafolio/C++/build/Debug/outDebug",
+      "cwd": "/home/lujafrik/GitHub/Portafolio/C++",
+      "program": "/home/lujafrik/GitHub/Portafolio/C++/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [
