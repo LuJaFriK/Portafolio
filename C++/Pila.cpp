@@ -2,15 +2,16 @@
 #include <stdexcept>
 #include <string>
 //Ayuda a definir una plantilla para la clase en concreto
+template <typename var>
 class Pila {
     private:
         int SP;
-        std::string* Data;
+        var* Data;
         int capacity;
 
     public:
         Pila(int size): SP(-1), capacity(size){
-            Data = new std::string[size];
+            Data = new var[size];
         }
 
         ~Pila(){
@@ -26,12 +27,12 @@ class Pila {
             return (SP==capacity-1);
         }
         //retorna el objeto en la cabecera
-        std::string pull()const{
+        var pull()const{
             if(!empty()) return Data[SP]; 
             else throw std::out_of_range("Error: La pila está vacía.");
         }
         //ingresa un nuevo dato
-        void push(const std::string dato){
+        void push(const var dato){
             if (!full()){
                 SP++;
                 Data[SP] = dato;
@@ -40,9 +41,9 @@ class Pila {
             }
         }
         //Elimina y retorna un dato de la pila
-        std::string pop(){
+        var pop(){
             if(!empty()){
-                std::string deleted = Data[SP];
+                var deleted = Data[SP];
                 SP--;
                 return deleted;
             }else{
@@ -66,7 +67,7 @@ int main(){
     int cantidad;
     std::cout<<"Ingresa la cantidad de datos: "<<std::endl;
     std::cin>>cantidad;
-    Pila* pila = new Pila(cantidad);
+    Pila<std::string>* pila = new Pila<std::string>(cantidad);
     do{
         int opc = menu();
         if(opc==1){

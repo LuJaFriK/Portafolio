@@ -7,3 +7,8 @@
 /Java/POO/RPG/nbproject/private/
 .vscode/c_cpp_properties.json
 .vscode/launch.json
+.vscode/settings.json
+C\#/app/obj/Debug/net9.0/app.GeneratedMSBuildEditorConfig.editorconfig
+C\#/app/obj/Debug/net9.0/app.assets.cache
+C\#/app/obj/Debug/net9.0/app.AssemblyInfoInputs.cache
+C\#/app/obj/Debug/net9.0/app.AssemblyInfo.cs
