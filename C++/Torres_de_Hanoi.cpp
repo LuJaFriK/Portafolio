@@ -31,6 +31,7 @@ class Pila {
         bool full()const{
             return (SP==capacity-1);
         }
+
         //retorna el objeto en la cabecera
         int pull()const{
             return Data[SP]; 
@@ -41,7 +42,8 @@ class Pila {
         }
         //Elimina y retorna un dato de la pila
         int pop(){
-                return Data[SP--];
+            if(SP==-1) return -1; 
+            return Data[SP--];
         }
 };
 
@@ -72,11 +74,12 @@ class Torres{
     
     public:
 
-        Torres(){
-            A = new Pila(4);
-            B = new Pila(4);
-            C = new Pila(4);
-            for(int i=5;i>0;i--) A->push(i);
+        Torres(int length){
+            length-=1;
+            A = new Pila(length);
+            B = new Pila(length);
+            C = new Pila(length);
+            for(int i=length+1;i>0;i--) A->push(i);
         }
 
         void insert(const char sends, const char gets){
@@ -84,7 +87,7 @@ class Torres{
             Pila* sender = getTorre(sends);
             Pila* receptor = getTorre(gets);
 
-            if((sender = nullptr) || (receptor==nullptr)) throw std::invalid_argument("Los caracteres no son validos.");
+            if((sender == nullptr) || (receptor==nullptr)) throw std::invalid_argument("Los caracteres no son validos.");
 
             if (sender->pull() < receptor->pull()){
                 receptor->push(sender->pop());
@@ -93,21 +96,19 @@ class Torres{
         }
 
         bool status(){
-            //Si no hay discos en A ni C pero si en B o no hay en A ni B pero si en C
-            if((A->pull()<0 && B->pull()> 0&& C->pull()<0) || (A->pull()<0 && B->pull()<0 && C->pull()>0)) return true;
-            return false;
+            //Si alguna de las pilas está llena retorna verdadero y termina el juego
+            return (!B->full()||!C->full());
         }
 
         void print(){
-            Pila* arr[] = {A,B,C};
-            for(int i=0;i<3;i++){
-                int* torre = arr[i]->get();
-                std::cout << '|' << std::endl;
-                std::cout << '|';
-                for(int x=0;x<5;x++) std::cout << torre[x];  
-                std::cout << '|' << std::endl;
-                std::cout << std::endl;
-                std::cout << std::endl;
+            Pila arr[] = {*A,*B,*C};
+            for(Pila torre : arr){
+                while(true){
+                    int disco = torre.pop();
+                    if(disco==-1) break;
+                    std::cout<<disco;
+                }
+                std::cout<<std::endl;
             }
         }
         
@@ -117,7 +118,6 @@ int menu(){
     int opcion;
     std::cout<<"Ingresa una opción: "<<std::endl;
     std::cout<<"1.-. Mover de una casilla a otra."<<std::endl;
-    std::cout<<"2.-. Verificar."<<std::endl;
     std::cout<<"0.-. Salir."<<std::endl;
     std::cin>>opcion;
     return opcion;
@@ -125,24 +125,22 @@ int menu(){
 
 
 int main(){
-    Torres* torres = new Torres();
-    while(true){
+    int cant;
+    std::cout<<"¿Cuántos discos quieres en tu juego? "<<std::endl;
+    std::cin>> cant;
+    Torres* torres = new Torres(cant);
+    while(torres->status()){
         torres->print();
         switch (menu()) {
             case 1:
                 //mueve una ficha de un lugar a otro
-                char torre1=' ';
-                char torre2=' ';
+                char torre1;
+                char torre2;
                 std::cout<<"Ingresa la torre que envia: (A,B,C)"<<std::endl;
                 std::cin>> torre1;
                 std::cout<<"Ingresa la torre que recibe: (A,B,C)"<<std::endl;
                 std::cin>> torre2;
                 torres->insert(torre1, torre2);
-                break;
-            case 2:
-                if(torres->status()) {
-                    std::cout<< "Felicidades, haz terminado el juego."<<std::endl;
-                }else std::cout<< "El juego aun no termina."<<std::endl;
                 break;
             case 0:
                 return 0;
@@ -151,5 +149,6 @@ int main(){
                 break;
         }
     }
+    std::cout<< "Felicidades, haz terminado el juego."<<std::endl;
     return 0;
 }
