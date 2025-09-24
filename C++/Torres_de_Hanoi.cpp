@@ -18,9 +18,13 @@ class Pila {
         ~Pila(){
             delete[] Data;
         }
-        
-        int* get(){
-            return Data;
+
+        // Constructor de copia profunda
+        Pila(const Pila& other) : SP(other.SP), capacity(other.capacity) {
+            Data = new int[capacity]; // Asigna nueva memoria
+            for (int i = 0; i <= SP; ++i) {
+                Data[i] = other.Data[i]; // Copia el contenido
+            }
         }
 
         //retorna si la Pila está vacia
@@ -41,8 +45,7 @@ class Pila {
                 Data[++SP] = dato;
         }
         //Elimina y retorna un dato de la pila
-        int pop(){
-            if(SP==-1) return -1; 
+        int pop(){ 
             return Data[SP--];
         }
 };
@@ -56,19 +59,9 @@ class Torres{
         
         //Para obtener la torre segun el nombre
         Pila* getTorre(const char name){
-            std::cout<< "Se ejecuta     ";
-            if(name == 'A') {
-                std::cout<< "Se ejecuta A     ";
-                return this->A;
-            }
-            if(name == 'B') {
-                std::cout<< "Se ejecuta B    ";
-                return this->B;
-            }
-            if(name == 'C') {
-                std::cout<< "Se ejecuta C     ";
-                return this->C;
-            }
+            if(name == 'A') return this->A;   
+            if(name == 'B') return this->B;     
+            if(name == 'C') return this->C;
             return nullptr;
         }
     
@@ -89,27 +82,27 @@ class Torres{
 
             if((sender == nullptr) || (receptor==nullptr)) throw std::invalid_argument("Los caracteres no son validos.");
 
-            if (sender->pull() < receptor->pull()){
+            if (sender->pull() <= receptor->pull() && receptor->empty()){
                 receptor->push(sender->pop());
             }
             else throw std::invalid_argument("No puedes colocar ese disco ahí.");
         }
 
         bool status(){
-            //Si alguna de las pilas está llena retorna verdadero y termina el juego
-            return (!B->full()||!C->full());
+            //Si alguna de las pilas está llena termina el juego
+            return !(B->full()||C->full());
         }
 
-        void print(){
-            Pila arr[] = {*A,*B,*C};
-            for(Pila torre : arr){
-                while(true){
-                    int disco = torre.pop();
-                    if(disco==-1) break;
-                    std::cout<<disco;
-                }
-                std::cout<<std::endl;
+        void print(char torre){
+            Pila pila = *getTorre(torre);
+            std::cout<<' '<<std::endl;
+            while(true){
+                int disco = pila.pop();
+                if (disco==0) break;
+                std::cout<<' '<<disco<<std::endl;
             }
+            std::cout<<"_"<<torre<<"_"<<std::endl;
+            
         }
         
 };
@@ -130,7 +123,9 @@ int main(){
     std::cin>> cant;
     Torres* torres = new Torres(cant);
     while(torres->status()){
-        torres->print();
+        torres->print('A');
+        torres->print('B');
+        torres->print('C');
         switch (menu()) {
             case 1:
                 //mueve una ficha de un lugar a otro
@@ -140,7 +135,11 @@ int main(){
                 std::cin>> torre1;
                 std::cout<<"Ingresa la torre que recibe: (A,B,C)"<<std::endl;
                 std::cin>> torre2;
-                torres->insert(torre1, torre2);
+                try{
+                    torres->insert(torre1, torre2);
+                }catch(std::invalid_argument){
+                    std::cout<<"La torre no existe"<<std::endl;
+                }
                 break;
             case 0:
                 return 0;
