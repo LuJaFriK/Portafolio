@@ -1,7 +1,6 @@
-#include <cstddef>
+
 #include <iostream>
 #include <stdexcept>
-#include <string>
 
 
 class Pila {
@@ -33,7 +32,7 @@ class Pila {
         }
         //retorna si la pila está llena
         bool full()const{
-            return (SP==capacity-1);
+            return (SP==capacity);
         }
 
         //retorna el objeto en la cabecera
@@ -82,7 +81,9 @@ class Torres{
 
             if((sender == nullptr) || (receptor==nullptr)) throw std::invalid_argument("Los caracteres no son validos.");
 
-            if (sender->pull() <= receptor->pull() && receptor->empty()){
+            if(sender->empty()) throw std::invalid_argument("No hay discos para colocar.");
+
+            if ((sender->pull() <= receptor->pull()) || (receptor->empty())){
                 receptor->push(sender->pop());
             }
             else throw std::invalid_argument("No puedes colocar ese disco ahí.");
@@ -107,16 +108,6 @@ class Torres{
         
 };
 
-int menu(){
-    int opcion;
-    std::cout<<"Ingresa una opción: "<<std::endl;
-    std::cout<<"1.-. Mover de una casilla a otra."<<std::endl;
-    std::cout<<"0.-. Salir."<<std::endl;
-    std::cin>>opcion;
-    return opcion;
-}
-
-
 int main(){
     int cant;
     std::cout<<"¿Cuántos discos quieres en tu juego? "<<std::endl;
@@ -126,26 +117,16 @@ int main(){
         torres->print('A');
         torres->print('B');
         torres->print('C');
-        switch (menu()) {
-            case 1:
-                //mueve una ficha de un lugar a otro
-                char torre1;
-                char torre2;
-                std::cout<<"Ingresa la torre que envia: (A,B,C)"<<std::endl;
-                std::cin>> torre1;
-                std::cout<<"Ingresa la torre que recibe: (A,B,C)"<<std::endl;
-                std::cin>> torre2;
-                try{
-                    torres->insert(torre1, torre2);
-                }catch(std::invalid_argument){
-                    std::cout<<"La torre no existe"<<std::endl;
-                }
-                break;
-            case 0:
-                return 0;
-            default:
-                std::cout<< "Opción no válida."<<std::endl;
-                break;
+        char torre1;
+        char torre2;
+        std::cout<<"Ingresa la torre que envia: (A,B,C)"<<std::endl;
+        std::cin>> torre1;
+        std::cout<<"Ingresa la torre que recibe: (A,B,C)"<<std::endl;
+        std::cin>> torre2;
+        try{
+            torres->insert(torre1, torre2);
+        }catch(std::invalid_argument){
+            std::cout<<"La torre no existe"<<std::endl;
         }
     }
     std::cout<< "Felicidades, haz terminado el juego."<<std::endl;
