@@ -17,21 +17,20 @@ def con(expresion:str):
     operadores:list[str] = []
     operandos:list[str] = []
 
-    i=0
     numbers = 0
     for char in expresion:
         if char in ('*','/','+','-'):
             operadores.append(char)
         try:
             n = float(char)
-            operandos.append(char)
+            postorden+=char
+            numbers+=1
         except ValueError:
             pass
 
-        if len(operandos)>1:
-            postorden+=operandos.pop()
-            postorden+=operandos.pop()
+        if numbers>1:
             postorden+=operadores.pop()
+            numbers = 0
 
     print(operadores)
     print(operandos)
