@@ -8,16 +8,7 @@
 .vscode/c_cpp_properties.json
 .vscode/launch.json
 .vscode/settings.json
-C\#/app/obj/Debug/net9.0/app.GeneratedMSBuildEditorConfig.editorconfig
-C\#/app/obj/Debug/net9.0/app.assets.cache
-C\#/app/obj/Debug/net9.0/app.AssemblyInfoInputs.cache
-C\#/app/obj/Debug/net9.0/app.AssemblyInfo.cs
-C\#/app/obj/Debug/net9.0/app.AssemblyInfoInputs.cache
-C\#/app/obj/Debug/net9.0/app.assets.cache
-C\#/app/obj/Debug/net9.0/app.GeneratedMSBuildEditorConfig.editorconfig
-C\#/app/obj/Debug/net9.0/app.AssemblyInfoInputs.cache
-C\#/app/obj/Debug/net9.0/app.assets.cache
-C\#/app/obj/Debug/net9.0/app.GeneratedMSBuildEditorConfig.editorconfig
+C\#/app
 Python/.idea/inspectionProfiles/profiles_settings.xml
 Python/.idea/misc.xml
 Python/.idea/modules.xml
