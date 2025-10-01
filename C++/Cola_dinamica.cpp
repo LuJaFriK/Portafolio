@@ -25,7 +25,9 @@ class Cola{
             while(!empty()) pop();
         }
 
-
+        int size()const{
+            return counter;
+        }
 
         void add(var valor){
             Nodo* nuevo = new Nodo(valor);

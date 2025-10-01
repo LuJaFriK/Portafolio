@@ -2,14 +2,13 @@
 #include <stdexcept>
 class Cola{
     private:
-        int length;
         int in;
         int out;
         int counter;
         int* Data;
 
         void iterate(int& val){
-            val = (val+1) % length;
+            val = (val+1) % sizeof(*Data);
         }
 
         bool empty()const{
@@ -17,17 +16,25 @@ class Cola{
         }
 
         bool full()const{
-            return (counter == length);
+            return (counter == *Data);
         }
 
     public:
         
-        Cola(int length):length(length),in(0),out(0),counter(0){
+        Cola(int length):in(0),out(0),counter(0){
             Data = new int[length];
         }
 
         ~Cola(){
             delete Data;
+        }
+
+        int get(){
+            return *Data;
+        }
+
+        int size(){
+            return counter;
         }
 
         void push(int val){
@@ -64,7 +71,7 @@ void llenar(Cola& cola){
     }
 }
 
-void imprimir(Cola cola){
+void imprimir(Cola& cola){
     while(true){
         try{
             std::cout<<cola.pop()<<std::endl;
@@ -76,7 +83,9 @@ void imprimir(Cola cola){
 
 int main(){
     Cola cola(6);
-    llenar(cola); 
+    for (int i=0;i<6;i++) cola.push(i);
+    cola.pop();
+    cola.push(55);
     imprimir(cola);
     return 0;
 }
