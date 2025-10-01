@@ -4,24 +4,20 @@ class Cola{
     private:
         int in;
         int out;
-        int counter;
+        int length;
         int* Data;
 
-        void iterate(int& val){
-            val = (val+1) % sizeof(*Data);
-        }
-
         bool empty()const{
-            return (counter == 0);
+            return (in == out);
         }
 
         bool full()const{
-            return (counter == *Data);
+            return ((in + 1) % length == out);
         }
 
     public:
         
-        Cola(int length):in(0),out(0),counter(0){
+        Cola(int length):in(0),out(0),length(length){
             Data = new int[length];
         }
 
@@ -29,19 +25,10 @@ class Cola{
             delete Data;
         }
 
-        int get(){
-            return *Data;
-        }
-
-        int size(){
-            return counter;
-        }
-
-        void push(int val){
+        void encolar(int val){
             if (full()) throw std::out_of_range("La cola está llena.");
             Data[in] = val;
-            iterate(in);
-            counter++;
+            in = (in+1) % length;
         }
 
         int pull(){
@@ -50,42 +37,29 @@ class Cola{
             return Data[out];
         }
 
-        int pop(){
+        int desencolar(){
             if(empty()) throw std::out_of_range("La cola está vacía.");
 
             const int val = Data[out];
-            iterate(out);
-            counter--;
+            out = (out+1) % length;
             return val;
+        }
+
+        void mostrar(){
+            int i = out;
+            while(i!=in){
+                std::cout<<Data[i]<<std::endl;
+                i = (i + 1) % length;
+            }
         }
 
 };
 
-void llenar(Cola& cola){
-    for(int i=0;true;i++){
-        try{
-            cola.push(i);
-        }catch(std::out_of_range){
-            break;
-        }
-    }
-}
-
-void imprimir(Cola& cola){
-    while(true){
-        try{
-            std::cout<<cola.pop()<<std::endl;
-        }catch(std::out_of_range){
-            break;
-        }
-    }
-}
-
 int main(){
     Cola cola(6);
-    for (int i=0;i<6;i++) cola.push(i);
-    cola.pop();
-    cola.push(55);
-    imprimir(cola);
+    for (int i=0;i<5;i++) cola.encolar(i);
+    cola.desencolar();
+    cola.encolar(55);
+    cola.mostrar();
     return 0;
 }

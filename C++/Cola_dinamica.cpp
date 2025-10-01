@@ -12,24 +12,28 @@ class Cola{
 
         Nodo* head;
         Nodo* back;
-        int counter;
 
         bool empty(){
             return (head == nullptr);
         }
 
     public:
-        Cola():head(nullptr),back(nullptr),counter(0){}
+        Cola():head(nullptr),back(nullptr){}
 
         ~Cola(){
-            while(!empty()) pop();
+            while(!empty()) desencolar();
         }
 
-        int size()const{
-            return counter;
+        void mostrar(){
+            Nodo* current = head;
+            while(current!=nullptr){
+                std::cout<<current->valor<<std::endl;
+
+                current = current->next;
+            }
         }
 
-        void add(var valor){
+        void encolar(var valor){
             Nodo* nuevo = new Nodo(valor);
             if(empty()){
                 head = nuevo;
@@ -38,7 +42,6 @@ class Cola{
                 back->next = nuevo;
                 back = back->next;
             }
-            counter++;
         }
 
         var pull()const{
@@ -47,7 +50,7 @@ class Cola{
             return head->valor;
         }
 
-        var pop(){
+        var desencolar(){
 
             if(empty()) throw std::out_of_range("No hay elementos en la cola.");
 
@@ -59,30 +62,18 @@ class Cola{
 
             if(head==nullptr) back = nullptr;
 
-            counter--;
-
             return val;
 
         }
 };
 
 void llenar(Cola<int>& cola){
-    for(int i=0;i<235;i++) cola.add(i);
-}
-
-void imprimir(Cola<int>& cola){
-    while(true){
-        try{
-            std::cout<<cola.pop()<<std::endl;
-        }catch(std::out_of_range){
-            return;
-        }
-    }
+    for(int i=0;i<235;i++) cola.encolar(i);
 }
 
 int main(){
     Cola<int> cola;
     llenar(cola);
-    imprimir(cola);
+    cola.mostrar();
     return 0;
 }
