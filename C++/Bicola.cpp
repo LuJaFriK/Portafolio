@@ -3,23 +3,30 @@
 #include <stdexcept>
 
 template<typename var>
-class Cola{
+class Bicola{
     private:
         struct Nodo{
             var valor;
-            Nodo* next;
-            Nodo(var val):valor(val),next(nullptr){}
+            Nodo* back;
+            Nodo* front;
+            Nodo(var val):valor(val),back(nullptr),front(nullptr){}
         };
 
         Nodo* head;
         Nodo* back;
+        bool restrict_entrada_or_salida;
+
+        static void append(Nodo*& anterior, Nodo*& posterior){
+            anterior->front = posterior;
+            posterior->back = anterior;
+        }
 
 
     public:
-        Cola():head(nullptr),back(nullptr){}
+        Bicola(bool restrict_entrada_or_salida):head(nullptr),back(nullptr),restrict_entrada_or_salida(restrict_entrada_or_salida){}
 
-        ~Cola(){
-            while(!empty()) desencolar();
+        ~Bicola(){
+            while(!empty()) desencolar(false);
         }
 
         bool empty() const {
@@ -31,18 +38,25 @@ class Cola{
             while(current!=nullptr){
                 std::cout<<current->valor<<std::endl;
 
-                current = current->next;
+                current = current->front;
             }
         }
 
-        void encolar(var valor){
+        void encolar(bool alternate, var valor){
             Nodo* nuevo = new Nodo(valor);
-            if(empty()){
+
+            if(empty()) {
                 head = nuevo;
                 back = nuevo;
+                return;
+            }
+
+            if(alternate && !restrict_entrada_or_salida){
+                append(back,nuevo);
+                back = nuevo;
             }else{
-                back->next = nuevo;
-                back = back->next;
+                append(nuevo,head);
+                head = nuevo;
             }
         }
 
@@ -52,19 +66,21 @@ class Cola{
             return head->valor;
         }
 
-        var desencolar(){
+        var desencolar(bool alternate){
+           if(empty()) throw std::out_of_range("No hay elementos en la cola.");
+           Nodo* del;
+            if(alternate && !restrict_entrada_or_salida){
+                del = back;
+                back = back->back;
+           }else{
+                del = head;
+                head = head->front;
+           }
 
-            if(empty()) throw std::out_of_range("No hay elementos en la cola.");
+           const var val = del->valor;
+           delete del;
 
-            const var val = head->valor;
-            
-            Nodo*del = head;
-            head = head->next;
-            delete del;
-
-            if(head==nullptr) back = nullptr;
-
-            return val;
+           return val;
 
         }
 };
@@ -80,7 +96,7 @@ int menu(){
 }
 
 int main(){
-    Cola<std::string> cola{};
+    Bicola<std::string> cola(true);
     while(true){
         int opc = menu();
         if (opc == 1){

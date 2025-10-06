@@ -1,5 +1,5 @@
 #include <iostream>
-
+template<typename var>
 class Pila{
     private:
     
@@ -43,15 +43,21 @@ class Pila{
     
 };
 
+int menu(){
+    int opcion;
+    std::cout<<"1. Ingresar un dato."<<std::endl;
+    std::cout<<"2. Mostrar los datos en el largo."<<std::endl;
+    std::cout<<"3. Eliminar un dato."<<std::endl;
+    std::cin>> opcion;
+    return opcion;
 
+}
 
 int main(){
-
-    Pila* pila = new Pila();
-
-    for (int i=0;i<67;i++) pila->push(i);
-
-    for (int i=0;i<67;i++) std::cout<<pila->pop()<<std::endl;
+    int len;
+    std::cout<<"Ingresa el largo de la cola."<<std::endl;
+    std::cin>> len;
+     
 
 
 
