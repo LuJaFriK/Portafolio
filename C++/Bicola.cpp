@@ -2,9 +2,20 @@
 #include <iostream>
 #include <stdexcept>
 
-template<typename var>
-class Bicola{
+struct Bool{
     private:
+        bool value;
+    public:
+        Bool(bool boolean):value(boolean){}
+        bool equals(bool& boolean){return (value==boolean);}
+        bool get(){return value;}
+};
+
+template<typename var>
+class Bicola {
+
+    private:
+
         struct Nodo{
             var valor;
             Nodo* back;
@@ -14,7 +25,7 @@ class Bicola{
 
         Nodo* head;
         Nodo* back;
-        bool restrict_entrada_or_salida;
+        Bool* entrada_or_salida;
 
         static void append(Nodo*& anterior, Nodo*& posterior){
             anterior->front = posterior;
@@ -23,7 +34,9 @@ class Bicola{
 
 
     public:
-        Bicola(bool restrict_entrada_or_salida):head(nullptr),back(nullptr),restrict_entrada_or_salida(restrict_entrada_or_salida){}
+        Bicola(bool entrada_or_salida):head(nullptr),back(nullptr),entrada_or_salida(new Bool(entrada_or_salida)){}
+
+        Bicola():head(nullptr),back(nullptr),entrada_or_salida(nullptr){}
 
         ~Bicola(){
             while(!empty()) desencolar(false);
@@ -90,6 +103,7 @@ int menu(){
     std::cout<<"1. Ingresar un dato."<<std::endl;
     std::cout<<"2. Mostrar los datos en el largo."<<std::endl;
     std::cout<<"3. Eliminar un dato."<<std::endl;
+    std::cout<<"4. ."<<std::endl;
     std::cin>> opcion;
     return opcion;
 
@@ -112,7 +126,7 @@ int main(){
         else if(opc == 2) cola.mostrar();
         else if (opc == 3){
             try {
-                std::cout<<cola.desencolar()<<" eliminado."<<std::endl;
+                std::cout<<cola.desencolar( )<<" eliminado."<<std::endl;
             } catch (std::out_of_range) {
                 std::cout<< "La cola esta vacia"<<std::endl;
             }
