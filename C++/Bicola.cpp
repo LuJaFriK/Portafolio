@@ -27,6 +27,11 @@ class Bicola {
             anterior->front = posterior;
             posterior->back = anterior;
         }
+        
+        bool condicion(bool alternate){
+            if(entrada_or_salida == nullptr) return true;
+            if(alternate && )
+        }
 
         Nodo* head;
         Nodo* back;
@@ -44,9 +49,7 @@ class Bicola {
             delete entrada_or_salida;
         }
 
-        bool empty() const {
-            return (head == nullptr);
-        }
+        bool empty() const {return (head == nullptr);}
 
         void mostrar(){
             Nodo* current = head;
@@ -60,7 +63,7 @@ class Bicola {
         void encolar(var valor,bool alternate){
             Nodo* nuevo = new Nodo(valor);
 
-            if (entrada_or_salida && entrada_or_salida->get() == true) throw std::invalid_argument("La cola es restrictiva de entrada.");
+            if (alternate && restriccion()) throw std::invalid_argument("La cola es restrictiva de entrada.");
 
             if(empty()) {
                 head = nuevo;
@@ -68,10 +71,11 @@ class Bicola {
                 return;
             }
 
-            if(alternate){//Si quiere encolar por arriba
+            if(alternate && entrada_or_salida->get()){//Si quiere encolar por arriba
                 
                 append(nuevo,head);
                 head = nuevo;
+
             }else{//Si quiere encolar por abajo
                 append(back,nuevo);
                 back = nuevo;
@@ -79,32 +83,36 @@ class Bicola {
         }
 
         var pull(bool alternate)const{
+
+            bool restriccion = (alternate && entrada_or_salida && entrada_or_salida->get());
+
             if(empty()) throw std::out_of_range("No hay elementos en la cola.");
 
-            if (entrada_or_salida && entrada_or_salida->get() == false) throw std::invalid_argument("La cola es restrictiva de salida.");
+            if (alternate && !restriccion) throw std::invalid_argument("La cola es restrictiva de salida.");
 
-            if(alternate) return back->valor;
-            return head->valor;
+            if(alternate && !entrada_or_salida->get()) return back->valor;
+            
+            else return head->valor;
         }
 
         var desencolar(bool alternate){
             if(empty()) throw std::out_of_range("No hay elementos en la cola.");
 
-            if (entrada_or_salida && entrada_or_salida->get() == false) throw std::invalid_argument("La cola es restrictiva de salida.");
+            if (alternate && entrada_or_salida->get() == false) throw std::invalid_argument("La cola es restrictiva de salida.");
             Nodo* del;
-            if (head == back) { // Caso especial: solo queda un nodo
+            if (head == back) { // si solo queda un nodo
                 del = head;
                 head = nullptr;
                 back = nullptr;
             }
-            else if(alternate){
-                //Avanzar de nodo
+            else if(alternate && !entrada_or_salida->get()){
+                //Retroceder de nodo
                 del = back;
                 back = back->back;
                 //cortar el enlace
                 if (back) back->front = nullptr;
            }else{
-                //Retroceder de nodo
+                //Avanzar de nodo
                 del = head;
                 head = head->front;
                 //cortar el enlace
