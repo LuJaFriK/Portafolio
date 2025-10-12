@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Professional CV</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        'primary-blue': '#1E3A8A',
+                        'secondary-gray': '#E5E7EB',
+                        'text-dark': '#1F2937',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F3F4F6;
+        }
+        .section-title {
+            position: relative;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+            color: #1E3A8A;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .section-title::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 50px;
+            height: 3px;
+            background-color: #3B82F6;
+            border-radius: 9999px;
+        }
+        .timeline-item {
+            border-left: 2px solid #D1D5DB;
+            padding-left: 1.5rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -8px;
+            top: 0.1rem;
+            width: 14px;
+            height: 14px;
+            background-color: #1E3A8A;
+            border-radius: 50%;
+            z-index: 10;
+        }
+        .skill-chip {
+            background-color: #3B82F6;
+            color: white;
+            padding: 0.3rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+            display: inline-block;
+        }
+        @media print {
+            body {
+                background-color: #fff;
+            }
+            .cv-container {
+                box-shadow: none !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                width: 100% !important;
+                max-width: none !important;
+            }
+            .sidebar {
+                padding: 1rem;
+                background-color: #F9FAFB !important;
+            }
+            .header-info {
+                padding: 1rem 0;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+</head>
+<body>
+<script>
+    const personalData = {
+        name: "Luis Javier Robles Topete",
+        photoUrl: "https://placehold.co/128x128/3B82F6/FFFFFF?text=JD",
+        title: "Técnico en Ofimática | Estudiante de Ingeniería en Sistemas Computacionales",
+        email: "lujaroblestopp@gmail.com",
+        phone: "(388) 113-1582",
+        location: "Colima, Colima",
+    };
+    const summary = "Estudiante de Ingeniería en Sistemas apasionado por la integración de software y hardware. Poseo experiencia práctica en el ensamblaje y configuración de sistemas informáticos. Busco aplicar mis conocimientos técnicos y mi entusiasmo por el desarrollo de software para crear soluciones innovadoras y eficientes. Interesado en roles que permitan combinar mi base teórica con habilidades prácticas en un entorno de constante aprendizaje y crecimiento.";
+    const experience = [
+        {
+            title: "Técnico de asistencia",
+            company: "Trabajo por cuenta propia",
+            duration: "Mar 2022 – Jun 2023",
+            points: [
+                "Asistí como técnico a 100 personas entre niños y adultos mayores con sus problemas con sus dispositivos electrónicos, sobre todo computadoras.",
+                "Mejoré su experiencia de uso de sus equipos incorporando software libre funcional para aligerar los costos y facilitar su uso.",
+                "Compartí mis conocimientos para que fueran capaces de mejorar su autonomía para el uso de su computadora",
+                "Implementé medidas de seguridad para que mis clientes tuvieran poco riesgo de resultar estafados o caer en un phishing."
+            ]
+        },
+        {
+            title: "Mesero bilingüe",
+            company: "Restaurante Navidad.",
+            duration: "Ago 2023 – Jun 2024",
+            points: [
+                "Participé en un equipo de meseros que aplicaba técnicas de gestión de recursos para la repartición equitativa de tareas.",
+                "Me desenvolví atendiendo clientes extrangeros en inglés para que pudieran comunicarse naturalmente y ofrecer un servicio de calidad.",
+            ]
+        }
+    ];
+    const education = [
+        {
+            degree: "Técnico en Ofimática",
+            institution: "Centro de Bachillerato Tecnológico Agropecuario No. 31",
+            location: "Mascota, Jalisco",
+            duration: "2021 – 2024"
+        },
+        {
+            degree: "Ingeniería en Sistemas Computacionales",
+            institution: "Tecnológico Nacional de México",
+            location: "Villa de Álvarez, Colima",
+            duration: "2024 – Actualidad"
+        }
+    ];
+    const skills = [
+        "Python",
+        "C++",
+        "Servidores locales",
+        "Machine learning",
+        "IA en local",
+        "Agile/Scrum",
+        "Domótica",
+        "Ensamblaje de computadoras"
+    ];
+    // ------------------- PROJECTS (OPTIONAL) -------------------
+    // Solo incluye esta sección si quieres mostrar proyectos personales
+//    const projects = [
+//        {
+//            name: "Open Source Design System",
+//            description: "Developed a public design system library on Figma with 200+ components, currently used by 10k designers globally.",
+//            link: "github.com/design-os"
+//        }
+//    ];
+    document.addEventListener('DOMContentLoaded', () => {
+        const createIcon = (dPath, viewBox = "0 0 24 24") => `
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="${viewBox}" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="${dPath}"/>
+            </svg>
+        `;
+        document.getElementById('header-name').textContent = personalData.name;
+        document.getElementById('header-title').textContent = personalData.title;
+        const photoContainer = document.getElementById('photo-container');
+        if (personalData.photoUrl) {
+            photoContainer.innerHTML = `
+                <img src="${personalData.photoUrl}" alt="${personalData.name} Profile Photo"
+                     class="w-24 h-24 md:w-32 md:h-32 rounded-full object-cover ring-4 ring-white shadow-lg"
+                     onerror="this.onerror=null;this.src='https://placehold.co/128x128/9CA3AF/FFFFFF?text=No+Image';">
+            `;
+        } else {
+            photoContainer.style.display = 'none';
+        }
+        const contactHtml = `
+            <div class="flex items-center text-sm mb-1">
+                ${createIcon("M3 8l7.89 5.26a2 2 0 002.22 0L21 8m-1-4H4a2 2 0 00-2 2v12a2 2 0 002 2h16a2 2 0 002-2V6a2 2 0 00-2-2z")}
+                <span id="contact-email">${personalData.email}</span>
+            </div>
+            <div class="flex items-center text-sm mb-1">
+                ${createIcon("M3 5a2 2 0 012-2h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V5z")}
+                <span id="contact-location">${personalData.location}</span>
+            </div>
+            <div class="flex items-center text-sm mb-1">
+                ${createIcon("M3 6l7.89 5.26a2 2 0 002.22 0L21 6")}
+                <span id="contact-phone">${personalData.phone}</span>
+            </div>
+        `;
+        document.getElementById('contact-info').innerHTML = contactHtml;
+        document.getElementById('summary-text').textContent = summary;
+        const experienceContainer = document.getElementById('experience-list');
+        experienceContainer.innerHTML = experience.map(job => `
+            <div class="timeline-item">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <h3 class="font-bold text-lg text-primary-blue">${job.title}</h3>
+                        <p class="text-sm italic text-gray-700">${job.company}</p>
+                    </div>
+                    <span class="text-sm font-semibold text-gray-500">${job.duration}</span>
+                </div>
+                <ul class="list-disc ml-4 mt-2 text-sm text-text-dark space-y-1">
+                    ${job.points.map(p => `<li>${p}</li>`).join('')}
+                </ul>
+            </div>
+        `).join('');
+        const educationContainer = document.getElementById('education-list');
+        educationContainer.innerHTML = education.map(edu => `
+            <div class="mb-3">
+                <div class="flex justify-between items-baseline">
+                    <h3 class="font-bold text-gray-800">${edu.degree}</h3>
+                    <span class="text-sm font-semibold text-gray-500">${edu.duration}</span>
+                </div>
+                <p class="text-sm italic text-gray-700">${edu.institution}</p>
+                <p class="text-xs text-gray-500">${edu.location}</p>
+            </div>
+        `).join('');
+        const skillsContainer = document.getElementById('skills-list');
+        skillsContainer.innerHTML = skills.map(skill => `
+            <span class="skill-chip">${skill}</span>
+        `).join('');
+        const projectsContainer = document.getElementById('projects-section');
+        if (projects.length > 0) {
+            projectsContainer.innerHTML = `
+                <div class="section-title mt-6">Projects</div>
+                ${projects.map(proj => `
+                    <div class="mb-4">
+                        <div class="flex justify-between items-baseline">
+                            <h3 class="font-bold text-gray-800">${proj.name}</h3>
+                            <a href="https://${proj.link}" target="_blank" rel="noopener" class="text-primary-blue text-sm hover:underline">${proj.link}</a>
+                        </div>
+                        <p class="text-sm text-text-dark mt-1">${proj.description}</p>
+                    </div>
+                `).join('')}
+            `;
+        } else {
+            projectsContainer.style.display = 'none';
+        }
+    });
+    function base64ToArrayBuffer(base64) {
+        const binaryString = atob(base64);
+        const len = binaryString.length;
+        const bytes = new Uint8Array(len);
+        for (let i = 0; i < len; i++) {
+            bytes[i] = binaryString.charCodeAt(i);
+        }
+        return bytes.buffer;
+    }
+</script>
+<div class="p-4 md:p-8">
+    <div class="cv-container max-w-5xl mx-auto bg-white shadow-2xl rounded-xl overflow-hidden">
+        <header class="bg-primary-blue text-white p-6 md:p-8 rounded-t-xl flex justify-between items-center">
+            <div class="flex-grow">
+                <h1 id="header-name" class="text-4xl md:text-5xl font-extrabold tracking-tight"></h1>
+                <h2 id="header-title" class="text-xl md:text-2xl font-light opacity-90 mt-1"></h2>
+            </div>
+            <div id="photo-container" class="flex-shrink-0 ml-4"></div>
+        </header>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-0">
+            <aside class="sidebar bg-secondary-gray p-6 md:p-8 text-text-dark md:col-span-1 border-r border-gray-200">
+                <div class="mb-8">
+                    <h2 class="font-bold text-xl mb-3 text-primary-blue">Contacto</h2>
+                    <div id="contact-info" class="space-y-2"></div>
+                </div>
+                <div class="mb-8">
+                    <h2 class="font-bold text-xl mb-3 text-primary-blue">Habilidades</h2>
+                    <div id="skills-list" class="flex flex-wrap"></div>
+                </div>
+                <div>
+                    <h2 class="font-bold text-xl mb-3 text-primary-blue">Educación</h2>
+                    <div id="education-list" class="space-y-4"></div>
+                </div>
+            </aside>
+            <main class="p-6 md:p-8 md:col-span-2">
+                <section class="mb-8">
+                    <div class="section-title">Resumen</div>
+                    <p id="summary-text" class="text-text-dark leading-relaxed"></p>
+                </section>
+                <section class="mb-8">
+                    <div class="section-title">Experiencia</div>
+                    <div id="experience-list"></div>
+                </section>
+                <section id="projects-section"></section>
+            </main>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+
+
