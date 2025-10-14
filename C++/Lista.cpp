@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
 
-class Lista{
+class Lista_alfabetica{
     private:
         struct Nodo{
             std::string value;
@@ -19,7 +19,7 @@ class Lista{
             return back; 
         }
 
-        bool empty()const{return head == nullptr;}
+        bool empty()const { return head == nullptr; }
 
         Nodo* order(std::string nombre)const{
             Nodo* nodo = head;
@@ -32,9 +32,9 @@ class Lista{
 
     public:
 
-        Lista():head(nullptr){}
+        Lista_alfabetica():head(nullptr){}
 
-        ~Lista(){
+        ~Lista_alfabetica(){
             Nodo* current = head;
             while(current!=nullptr){
                 Nodo* del = current;
@@ -76,7 +76,6 @@ class Lista{
                 nodo = nodo->front;
             } 
 
-
             return nodo->value;
         }
 
@@ -106,19 +105,17 @@ class Lista{
 
 int main(){
     
-    Lista lista{};
+    Lista_alfabetica lista{};
 
     lista.add("Luis");
     lista.add("Fredy");
     lista.add("osvaldo");
     lista.add("Agustimbre");
     lista.mostrar();
+    std::cout << "" << std::endl;
     lista.mod("osvaldo","Osvaldo");
     lista.remove("Agustimbre");
     lista.mostrar();    
-    
-
-
-    
+       
     return 0;
 }
