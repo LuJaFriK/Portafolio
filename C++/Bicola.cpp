@@ -22,15 +22,18 @@ class Bicola {
             Nodo(var val):valor(val),back(nullptr),front(nullptr){}
         };
 
-        //El metodo append enlaza doblemente dos nodos
+        //El metodo append enlaza doblemente dos nodos cualesquiera
         static void append(Nodo*& anterior, Nodo*& posterior){
             anterior->front = posterior;
             posterior->back = anterior;
         }
         
-        bool condicion(bool alternate){
-            if(entrada_or_salida == nullptr) return true;
-            if(alternate && )
+        bool restriccion(bool alternate, bool queue_or_unqueue) {
+            // Si no hay restricciones o si la operación no es alternativa, es factible.
+            if (entrada_or_salida == nullptr || !alternate) return true;
+
+            //En caso de ser alternativa o restrictiva, la operacion es factible mientras el nodo entre por el lado distinto al restricto
+            return queue_or_unqueue != entrada_or_salida->get();
         }
 
         Nodo* head;
@@ -49,7 +52,7 @@ class Bicola {
             delete entrada_or_salida;
         }
 
-        bool empty() const {return (head == nullptr);}
+        bool empty() const {return (head == nullptr && back == nullptr);}
 
         void mostrar(){
             Nodo* current = head;
@@ -63,7 +66,10 @@ class Bicola {
         void encolar(var valor,bool alternate){
             Nodo* nuevo = new Nodo(valor);
 
-            if (alternate && restriccion()) throw std::invalid_argument("La cola es restrictiva de entrada.");
+            //Si es infactible entonces !false == true 
+            if (!restriccion(alternate,true)) throw std::invalid_argument("La cola es restrictiva de entrada.");
+
+            //Dado que es factible:
 
             if(empty()) {
                 head = nuevo;
@@ -71,61 +77,69 @@ class Bicola {
                 return;
             }
 
-            if(alternate && entrada_or_salida->get()){//Si quiere encolar por arriba
+            if(alternate){//Si quiere encolar por arriba
                 
                 append(nuevo,head);
                 head = nuevo;
 
             }else{//Si quiere encolar por abajo
+
                 append(back,nuevo);
                 back = nuevo;
             }
         }
 
         var pull(bool alternate)const{
-
-            bool restriccion = (alternate && entrada_or_salida && entrada_or_salida->get());
-
             if(empty()) throw std::out_of_range("No hay elementos en la cola.");
-
-            if (alternate && !restriccion) throw std::invalid_argument("La cola es restrictiva de salida.");
-
-            if(alternate && !entrada_or_salida->get()) return back->valor;
             
+            //Si es infactible entonces !false == true
+            if(!restriccion(alternate,false)) throw std::invalid_argument("La cola es restrictiva de salida.");
+
+            //Si quiere sacar de abajo
+            if(alternate) return back->valor;
+            //Si quiere sacar de arriba
             else return head->valor;
         }
 
         var desencolar(bool alternate){
             if(empty()) throw std::out_of_range("No hay elementos en la cola.");
 
-            if (alternate && entrada_or_salida->get() == false) throw std::invalid_argument("La cola es restrictiva de salida.");
+            //Si es infactible entonces !false == true
+            if (!restriccion(alternate,false)) throw std::invalid_argument("La cola es restrictiva de salida.");
+            
+            //Dado que es factible:
+
             Nodo* del;
             if (head == back) { // si solo queda un nodo
                 del = head;
                 head = nullptr;
                 back = nullptr;
             }
-            else if(alternate && !entrada_or_salida->get()){
-                //Retroceder de nodo
+            else if(alternate){
+                //Asigna el nodo a eliminar
                 del = back;
+                //Retroceder de nodo
                 back = back->back;
                 //cortar el enlace
                 if (back) back->front = nullptr;
            }else{
-                //Avanzar de nodo
+                //Asigna el nodo a eliminar
                 del = head;
+                //Avanzar de nodo
                 head = head->front;
                 //cortar el enlace
                 if(head) head->back = nullptr;
            }
-
-           const var val = del->valor;
+           //Asigna el valor a retornar
+           var val = del->valor;
+           //Elimina el nodo y retorna
            delete del;
            return val;
 
         }
 };
 
+//Retorna true si la acción se hace por arriba y false si es por abajo
 bool arriba_o_abajo(){
     int opcion;
     std::cout<<"1. Por arriba."<<std::endl;
@@ -134,6 +148,7 @@ bool arriba_o_abajo(){
     return (opcion==1);
 }
 
+//Retorna el valor seleccionado del menu
 int menu(){
     int opcion;
     std::cout<<"1. Ingresar un dato."<<std::endl;
@@ -149,8 +164,8 @@ int main(){
     Bicola<std::string>* cola = nullptr; 
     int opcion;
     std::cout<<"1. Bicola normal."<<std::endl;
-    std::cout<<"2. Bicola restrictiva de entrada (solo desencolar)."<<std::endl;
-    std::cout<<"3. Bicola restrictiva de salida (solo encolar)."<<std::endl;
+    std::cout<<"2. Bicola restrictiva de entrada."<<std::endl;
+    std::cout<<"3. Bicola restrictiva de salida."<<std::endl;
     std::cout<<"Elige una opcion: ";
     std::cin>> opcion;
 
@@ -174,12 +189,11 @@ int main(){
         if (opc == 1){
             try {
 
-                bool por_arriba = !arriba_o_abajo();
                 std::string nombre;
                 std::cout<<"Ingresa el dato: ";
                 std::cin>> nombre;
                 
-                cola->encolar(nombre, !por_arriba); 
+                cola->encolar(nombre, arriba_o_abajo()); 
 
             } catch (const std::invalid_argument& e) {
                  std::cerr << "Error de restriccion: " << e.what() << std::endl;
@@ -191,9 +205,8 @@ int main(){
 
         else if (opc == 3){
             try {
-                bool por_arriba = arriba_o_abajo();
 
-                std::cout<<cola->desencolar(!por_arriba)<<" eliminado."<<std::endl;
+                std::cout<<cola->desencolar(!arriba_o_abajo())<<" eliminado."<<std::endl;
                 
             } catch (const std::invalid_argument& e) {
                  std::cerr << "Error de restriccion: " << e.what() << std::endl;
