@@ -11,24 +11,17 @@ class Lista{
         };
         
         Nodo* head;
-        Nodo* back;
 
-        static Nodo* link(Nodo*back,Nodo*front,bool which){
+        static Nodo* link(Nodo*back,Nodo*front){
             back->front = front;
             front->prev = back;
 
-            if(which) return front;
             return back; 
         }
 
         bool empty()const{return head == nullptr;}
 
-        Nodo* order(std::string nombre){
-            //Valida primero las puntas de la lista para evitar validaciones extras
-            if(empty()) return nullptr;
-            if(head->value < nombre) return head;
-            if(back->value > nombre) return back;
-            
+        Nodo* order(std::string nombre)const{
             Nodo* nodo = head;
             //Recorre la lista hasta encontrar el lugar del nuevo nodo
             while(nodo->value < nombre && nodo->front != nullptr){
@@ -36,52 +29,96 @@ class Lista{
             }
             return nodo;
         }
+
     public:
 
-        Lista():head(nullptr),back(nullptr){}
+        Lista():head(nullptr){}
 
-        void add(std::string name){
-            //Encontrar el lugar del nuevo nodo
-            Nodo* nodo = order(name);
-            //Si el lugar es nullptr, entonces el nuevo nodo es la cabeza y/o la cola
-            if(nodo == nullptr){
-                nodo = new Nodo(name);
-                head = nodo;
-                back = nodo;
-            }else{
-                //Obtener los nodos adyacentes
-                Nodo* front = nodo->front;
-                Nodo* prev = nodo->prev;
-                //Crear el nuevo nodo
-                Nodo* nuevo = new Nodo(name);
-                //Enlazar los nodos
-                link(prev,nuevo,false);
-                link(nuevo,front,true);
-                //Actualizar las puntas de la lista
-                if (prev == nullptr) head = nuevo;
-                if (front == nullptr) back = nuevo;
+        ~Lista(){
+            Nodo* current = head;
+            while(current!=nullptr){
+                Nodo* del = current;
+                current = current->front;
+                delete del;
             }
         }
 
-        std::string get(int index)const{
-            if(index < 0 || empty()) throw std::out_of_range("Índice inválido");
-            Nodo* nodo = head;
-            for(int i = 0; i < index; i++) nodo = nodo->front;
+        void add(std::string name){     
+            Nodo* nuevo = new Nodo(name);
 
-            if(nodo == nullptr) throw std::out_of_range("Índice inválido");
+            if(empty()){
+                head = nuevo;
+            }else if(name < head->value){
+                head = link(nuevo,head);
+            }else{
+                Nodo* nodo = order(name);   
+                //Obtener el nodo anterior
+                Nodo* prev = nodo->prev;
+                //Enlazar los nodos
+                link(prev,nuevo);
+                link(nuevo,nodo);
+            }
+        }
+
+        void mod(std::string original,std::string correct){
+            remove(original);
+            add(correct);
+        }
+
+        std::string get(int index)const{
+            //Validar indice invalido
+            if(index < 0) throw std::out_of_range("Índice inválido");
+            //Encontrar el nodo a retornar su valor
+            Nodo* nodo = head;
+            for(int i = 0; i < index; i++){
+                //Validar indice fuera del alcance
+                if(nodo == nullptr) throw std::out_of_range("Índice inválido");
+                nodo = nodo->front;
+            } 
+
 
             return nodo->value;
         }
 
         void remove(std::string name){
+            //Encontrar el nodo a eliminar 
             Nodo* del = head;
             while(del->value != name){
                 del = del->front;
             }
-            link(del->prev,del->front,true);
+            //Actualizar enlaces
             if (del == head) head = del->front;
-            if (del == back) back = del->prev;
+            else link(del->prev,del->front);
+            
             delete del;
         }
 
+        void mostrar(){
+            Nodo* nodo = head;
+            while(nodo!=nullptr){
+                std::cout << nodo->value << std::endl;
+                nodo = nodo->front;
+            }
+        }
+
 };
+
+
+int main(){
+    
+    Lista lista{};
+
+    lista.add("Luis");
+    lista.add("Fredy");
+    lista.add("osvaldo");
+    lista.add("Agustimbre");
+    lista.mostrar();
+    lista.mod("osvaldo","Osvaldo");
+    lista.remove("Agustimbre");
+    lista.mostrar();    
+    
+
+
+    
+    return 0;
+}
