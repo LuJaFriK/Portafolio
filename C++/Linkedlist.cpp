@@ -6,12 +6,12 @@
 #include <chrono>
 #include <cstdlib> // Para getpid() en Unix/Linux
 
-
+template<typename type>
 class Linkedlist{
     private:
 
     struct Nodo {
-        int value;
+        type value;
         Nodo* next;
         Nodo(int v, Nodo* n = nullptr) : value(v), next(n) {}
     };
@@ -51,18 +51,18 @@ class Linkedlist{
             length = n;
         }
         
-        void add(int value) {
+        void add(type value) {
             head = new Nodo(value, head);
             length++;
         }
 
 
-        int pop(int index) {
+        type pop(int index) {
             if (empty()) throw std::out_of_range("Lista vacía");
             if (index < 0 || index >= length) throw std::out_of_range("Índice inválido");
 
             Nodo* deleted_node;
-            int deleted_value;
+            type deleted_value;
 
             if (index == 0) {
                 deleted_node = head;
@@ -81,7 +81,7 @@ class Linkedlist{
             return deleted_value;
         }
 
-        void remove(int val) {
+        void remove(type val) {
             if (empty()) return;
 
             if (head->value == val) {
@@ -105,7 +105,7 @@ class Linkedlist{
             }
         }
 
-        int search(int val) const {
+        int search(type val) const {
             Nodo* current = head;
             int index = 0;
             while (current) {
@@ -116,7 +116,7 @@ class Linkedlist{
             return -1;
         }
 
-        int get(int index) const {
+        type get(int index) const {
             if (index < 0 || index >= length) throw std::out_of_range("Índice inválido");
             Nodo* current = head;
             for (int i = 0; i < index; i++) current = current->next;
@@ -149,7 +149,7 @@ class Linkedlist{
             // Recorrer la lista
             while (current != nullptr) {
                 // Agregar el valor del nodo actual
-                lista += std::to_string(current->value); // Convierte el valor a string si no lo es
+                lista.append(std::to_string(current->value)); // Convierte el valor a string si no lo es
                 // Si hay un nodo siguiente, agregar una coma y espacio
                 if (current->next != nullptr) {
                     lista += ", ";
@@ -168,7 +168,7 @@ class Linkedlist{
 
 void test(){
     //Paso 1: Crear lista
-    Linkedlist* lista = new Linkedlist();
+    Linkedlist<int>* lista = new Linkedlist<int>();
 
     //Paso 2: Crear 50000 espacios
     lista->random_linked_list(50000);

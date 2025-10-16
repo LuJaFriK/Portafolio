@@ -76,7 +76,6 @@ class Lista_alfabetica{
 
         void remove(std::string name){
             if(empty()){
-                // No need to print here, just return. Or handle as an error.
                 return;
             }
             
