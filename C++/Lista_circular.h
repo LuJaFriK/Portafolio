@@ -4,33 +4,25 @@
 #include <iostream>
 #include <stdexcept>
 #include <string>
-
+#include "Nodo.h"
 
 
 template<typename type>
 class Linked_circular_list {
-    private:
-        
-        struct Nodo {
-            type value;
-            Nodo* next;
-            Nodo* prev;
-            Nodo(type v, Nodo* next = nullptr,Nodo* prev = nullptr) : value(v), next(next),prev(prev) {}
-        };
 
     protected:
         
-        Nodo* head;
-        Nodo* back;
+        Nodo<type>* head;
+        Nodo<type>* back;
 
-        static void link(Nodo*back,Nodo*front){
+        static void link(Nodo<type>*back,Nodo<type>*front){
             //Si back es un nodo valido, lo enlaza con front
             if(back) back->next = front;
             //Si front es un nodo valido, lo enlaza con back
             if(front) front->prev = back;
         }
 
-        void remove(Nodo*& deleted_node) {
+        void remove(Nodo<type>*& deleted_node) {
             //Solo un nodo
             if (deleted_node == head && deleted_node == back) {
                 head = nullptr;
@@ -58,41 +50,44 @@ class Linked_circular_list {
     public:
         
         Linked_circular_list() : head(nullptr),back(nullptr){
-            head->prev = back;
-            back->next = head;
         }
 
-        virtual ~Linked_circular_list() {
-            Nodo* current = head;
-            while (current) {
-                Nodo* next = current->next;
-                delete current;
-                current = next;
+        ~Linked_circular_list() {
+            if (head) {
+                Nodo<type>* current = head;
+                back->next = nullptr; // Break the circle
+                while (current) {
+                    Nodo<type>* next = current->next;
+                    delete current;
+                    current = next;
+                }
+                head = nullptr;
+                back = nullptr;
             }
         }
 
         bool empty() const { return (head == nullptr); }
 
-        virtual void add(const type& value) {
+        void add(type value) {
             if(empty()){
                 head = new Nodo(value);
                 back = head;
             }else{
-                Nodo* nuevo = new Nodo(value);
+                Nodo<type>* nuevo = new Nodo(value);
                 link(nuevo, head);
                 head = nuevo;
+                back.next = head;
             }
         }
 
-        virtual type pop(const int& index) {
+        type pop(int index) {
             //Validar vacios
             if (empty()) throw std::out_of_range("Lista vacía");
             if (index < 0) throw std::out_of_range("Índice inválido");
 
-            Nodo* deleted_node = head;
+            Nodo<type>* deleted_node = head;
             //Encontrar el nodo 
-            for(int i=0;i<index;i++){
-                if (deleted_node->next == head && i !=0) throw std::out_of_range("Índice fuera de rango");
+            for(int i=0; i < index; i++){
                 deleted_node = deleted_node->next;
             }
 
@@ -102,8 +97,8 @@ class Linked_circular_list {
             return deleted_value;
         }
 
-        int search(const type& val) const {
-            Nodo* current = head;
+        int search(type val) const {
+            Nodo<type>* current = head;
             int index = 0;
             while (current) {
                 if (current->value == val) return index;
@@ -113,9 +108,9 @@ class Linked_circular_list {
             return -1;
         }
 
-        type get(const int& index) const {
+        type get(int index) const {
             if (index < 0) throw std::out_of_range("Índice inválido");
-            Nodo* current = head;
+            Nodo<type>* current = head;
             for (int i = 0; i < index; i++) {
                 if(current == nullptr)
                 current = current->next; throw std::out_of_range("Índice inválido");
@@ -123,8 +118,12 @@ class Linked_circular_list {
             return current->value;
         }
 
-        void print() const {
-            Nodo* current = head;
+        void mostrar() const {
+            if (head == head->next) {
+                std::cout << head->value << std::endl;
+                return;
+            }    
+            Nodo<type>* current = head;
             std::cout << "[";
             while (current) {
                 std::cout << current->value; 
