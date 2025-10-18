@@ -1,6 +1,7 @@
 #include <string>
 #include <iostream>
 #include <stdexcept>
+#include "Cola.hpp"
 
 struct Bool{
     private:
@@ -11,22 +12,9 @@ struct Bool{
 };
 
 template<typename var>
-class Bicola {
+class Bicola : Cola<var>{
 
     private:
-
-        struct Nodo{
-            var valor;
-            Nodo* back;
-            Nodo* front;
-            Nodo(var val):valor(val),back(nullptr),front(nullptr){}
-        };
-
-        //El metodo append enlaza doblemente dos nodos cualesquiera
-        static void append(Nodo*& anterior, Nodo*& posterior){
-            anterior->front = posterior;
-            posterior->back = anterior;
-        }
         
         bool restriccion(bool alternate, bool queue_or_unqueue) {
             // Si no hay restricciones o si la operación no es alternativa, es factible.
@@ -36,8 +24,8 @@ class Bicola {
             return queue_or_unqueue != entrada_or_salida->get();
         }
 
-        Nodo* head;
-        Nodo* back;
+        Nodo<var>* head;
+        Nodo<var>* back;
         Bool* entrada_or_salida;
 
 
@@ -55,16 +43,16 @@ class Bicola {
         bool empty() const {return (head == nullptr && back == nullptr);}
 
         void mostrar(){
-            Nodo* current = head;
+            Nodo<var>* current = head;
             while(current!=nullptr){
-                std::cout<<current->valor<<std::endl;
+                std::cout<<current->value<<std::endl;
 
-                current = current->front;
+                current = current->next;
             }
         }
 
         void encolar(var valor,bool alternate){
-            Nodo* nuevo = new Nodo(valor);
+            Nodo<var>* nuevo = new Nodo(valor);
 
             //Si es infactible entonces !false == true 
             if (!restriccion(alternate,true)) throw std::invalid_argument("La cola es restrictiva de entrada.");
@@ -79,12 +67,12 @@ class Bicola {
 
             if(alternate){//Si quiere encolar por arriba
                 
-                append(nuevo,head);
+                link(nuevo,head);
                 head = nuevo;
 
             }else{//Si quiere encolar por abajo
 
-                append(back,nuevo);
+                link(back,nuevo);
                 back = nuevo;
             }
         }
@@ -109,7 +97,7 @@ class Bicola {
             
             //Dado que es factible:
 
-            Nodo* del;
+            Nodo<var>* del;
             if (head == back) { // si solo queda un nodo
                 del = head;
                 head = nullptr;
@@ -119,19 +107,19 @@ class Bicola {
                 //Asigna el nodo a eliminar
                 del = back;
                 //Retroceder de nodo
-                back = back->back;
+                back = back->prev;
                 //cortar el enlace
-                if (back) back->front = nullptr;
+                if (back) back->next = nullptr;
            }else{
                 //Asigna el nodo a eliminar
                 del = head;
                 //Avanzar de nodo
-                head = head->front;
+                head = head->next;
                 //cortar el enlace
-                if(head) head->back = nullptr;
+                if(head) head->prev = nullptr;
            }
            //Asigna el valor a retornar
-           var val = del->valor;
+           var val = del->value;
            //Elimina el nodo y retorna
            delete del;
            return val;

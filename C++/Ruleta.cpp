@@ -1,12 +1,14 @@
-#include "Lista_circular.h"
+
 #include <stdexcept>
 #include <string>
 #include <iostream>
 #include <random>
+#include "Lista_circular.hpp"
+#include "InputUtils.hpp"
 
 class Ruleta : public Linked_circular_list<std::string>{
     private:
-        const int length;
+        
         int counter;
 
         int random_index() const {
@@ -20,20 +22,22 @@ class Ruleta : public Linked_circular_list<std::string>{
 
         ~Ruleta(){}
 
+        const int length;
+
         std::string kill() {
             
             if (counter <= 0) {
-                return "No hay elementos para eliminar";
+                return "No hay personas jugando.";
             }
             if (counter == 1) { 
-                return "El ganador es: " + head->value;
+                return "El ganador es: " + this->pull()+".";
             }
             
             int index = random_index();
             
             std::string eliminado = this->pop(index);
             counter--; 
-            return "Elemento eliminado al azar: " + eliminado;
+            return "El jugador: " + eliminado +" ha perdido.";
         }
 
         int size()const{ return counter; }
@@ -51,40 +55,25 @@ class Ruleta : public Linked_circular_list<std::string>{
 
 
 };
-
-
-int menu(){
-    int opcion;
-    std::cout<<"1. Ingresar un jugador."<<std::endl;
-    std::cout<<"2. Mostrar todos los participantes."<<std::endl;
-    std::cout<<"3. Jugar a la ruleta."<<std::endl;
-    std::cout<<"4. Terminar el juego."<<std::endl;
-    std::cin>> opcion;
-    return opcion;
-
-}
+//input agregado
 
 int main(){
     //Definir tamaño de la ruleta
-    std::cout << "Cuántos juegan?" << std::endl;
-    int players;
-    std::cin >> players;
+    int players = input<int>("Cuántos juegan? ");
     Ruleta ruleta(players);
     //Menu de juego
     while(true){
-        int opc = menu();
+        int opc = input<int>("1. Ingresar un jugador.\n2. Mostrar todos los participantes.\n3. Jugar a la ruleta.\n4. Terminar el juego.\n");
         if (opc == 1){
             try {
-                std::string nombre;
-                std::cout<<"Ingresa el dato: ";
-                std::cin>> nombre;
+                std::string nombre = input<std::string>("Ingresa el dato: ");
                 ruleta.add(nombre);
             } catch (std::out_of_range) {
                 std::cout<< "Ya se encuentran todos los jugadores."<<std::endl;
             }
         }
         //Mostrar los participantes
-        else if(opc == 2) ruleta.mostrar();
+        else if(opc == 2) std:: cout<< ruleta.mostrar() << std::endl;
         //Jugar
         else if (opc == 3) {
             while(ruleta.size()>1) std::cout << ruleta.kill() << std::endl;
@@ -92,8 +81,7 @@ int main(){
             std::cout << ruleta.kill() << std::endl; 
         } 
         //Terminar el juego
-        else if
-        (opc == 4) return 0;
+        else if(opc == 4) return 0;
         //Default
         else std::cout<<"Error. opción no válida."<<std::endl;   
     }

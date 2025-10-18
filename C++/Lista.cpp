@@ -1,45 +1,39 @@
 #include <iostream>
-#include <iterator>
 #include <ostream>
 #include <string>
+#include "Nodo.hpp"
 
 class Lista_alfabetica{
     private:
-        struct Nodo{
-            std::string value;
-            Nodo* front;
-            Nodo* prev;
-            Nodo(std::string nombre):value(nombre),front(nullptr),prev(nullptr){}
-        };
         
-        Nodo* head;
+        Nodo<std::string>* head;
 
-        static void link(Nodo*back,Nodo*front){
+        static void link(Nodo<std::string>*back,Nodo<std::string>*front){
             if(back){
-                back->front = front;
+                back->next = front;
             }
             if(front){
                 front->prev = back;
             }
         }
 
-        bool empty()const { return head == nullptr; }
+        bool empty() const { return head == nullptr; }
 
     public:
 
         Lista_alfabetica():head(nullptr){}
 
         ~Lista_alfabetica(){
-            Nodo* current = head;
+            Nodo<std::string>* current = head;
             while(current!=nullptr){
-                Nodo* del = current;
-                current = current->front;
+                Nodo<std::string>* del = current;
+                current = current->next;
                 delete del;
             }
         }
 
         void add(std::string name){     
-            Nodo* nuevo = new Nodo(name);
+            Nodo<std::string>* nuevo = new Nodo(name);
 
             if(empty()){
                 head = nuevo;
@@ -47,11 +41,11 @@ class Lista_alfabetica{
                 link(nuevo, head);
                 head = nuevo;
             } else {
-                Nodo* current = head;
-                while (current->front != nullptr && current->front->value < name) {
-                    current = current->front;
+                Nodo<std::string>* current = head;
+                while (current->next != nullptr && current->next->value < name) {
+                    current = current->next;
                 }
-                link(nuevo, current->front);
+                link(nuevo, current->next);
                 link(current, nuevo);
             }
         }
@@ -64,10 +58,10 @@ class Lista_alfabetica{
         std::string get(int index)const{
             if(index < 0) throw std::out_of_range("Índice inválido");
             
-            Nodo* nodo = head;
+            Nodo<std::string>* nodo = head;
             for(int i = 0; i < index; i++){
                 if(nodo == nullptr) throw std::out_of_range("Índice inválido");
-                nodo = nodo->front;
+                nodo = nodo->next;
             } 
             if(nodo == nullptr) throw std::out_of_range("Índice inválido");
 
@@ -79,9 +73,9 @@ class Lista_alfabetica{
                 return;
             }
             
-            Nodo* del = head;
+            Nodo<std::string>* del = head;
             while(del != nullptr && del->value != name){
-                del = del->front;
+                del = del->next;
             }
 
             if (del == nullptr){
@@ -90,19 +84,19 @@ class Lista_alfabetica{
             }
             
             if (del == head) {
-                head = del->front;
+                head = del->next;
             }
             
-            link(del->prev, del->front);
+            link(del->prev, del->next);
             
             delete del;
         }
 
         void mostrar(){
-            Nodo* nodo = head;
+            Nodo<std::string>* nodo = head;
             while(nodo!=nullptr){
                 std::cout << nodo->value << std::endl;
-                nodo = nodo->front;
+                nodo = nodo->next;
             }
         }
 
@@ -125,23 +119,23 @@ int main(){
     while(true){
         switch (menu()) {
         case 1:
-            {
+        {
             std::string name;
             std::cout << "Ingresa el nombre: "<<std::endl;
             std::cin >> name;
             lista.add(name);
-            }
+        }
         break;
         case 2:
             lista.mostrar();
         break;
         case 3:
-            {
+        {
             std::string name;
             std::cout << "Ingresa el nombre: "<<std::endl;
             std::cin >> name;
             lista.remove(name);
-            }
+        }
         break;
         case 4:
         return 0;

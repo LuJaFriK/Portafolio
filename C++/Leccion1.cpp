@@ -4,7 +4,7 @@
 using namespace std;
 
 string variables(){
-int edad = 0;
+    int edad = 0;
     const double pi = 3.141529;
     char letra = 'A';
     bool estudiante = true;

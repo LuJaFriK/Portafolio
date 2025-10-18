@@ -1,16 +1,16 @@
 #ifndef LINKEDLIST_H
 #define LINKEDLIST_H
 
-#include <iostream>
 #include <stdexcept>
 #include <string>
-#include "Nodo.h"
+#include <sstream>
+#include "Nodo.hpp"
 
 
 template<typename type>
 class Linked_circular_list {
 
-    protected:
+    private:
         
         Nodo<type>* head;
         Nodo<type>* back;
@@ -29,13 +29,13 @@ class Linked_circular_list {
                 back = nullptr;
             }//El nodo a eliminar es la cabeza
             else if(deleted_node == head){
-
+                //Desenlace
                 head = deleted_node->next;
                 link(back, head);
 
             }//El nodo a eliminar es la cola
             else if(deleted_node == back) {
-
+                //Desenlace
                 back = deleted_node->prev;
                 link(back, head);
             
@@ -43,6 +43,7 @@ class Linked_circular_list {
             else {
                 link(deleted_node->prev, deleted_node->next);
             }
+            //Eliminar el nodo al final
             delete deleted_node;
         }
 
@@ -69,16 +70,22 @@ class Linked_circular_list {
         bool empty() const { return (head == nullptr); }
 
         void add(type value) {
+            //Crea el nodo nuevo
+            Nodo<type>* nuevo = new Nodo(value);
+            //Si es vacia asigna el nodo nuevo a los apuntadores y los enlaza
             if(empty()){
-                head = new Nodo(value);
-                back = head;
+                head = back = nuevo;
+                link(head,back);
+            //Si no es vacia enlaza el nodo antes de la cabecera, despues de la cola y reasigna la cabeza
             }else{
-                Nodo<type>* nuevo = new Nodo(value);
-                link(nuevo, head);
+                link(nuevo,head);
+                link(back,nuevo);
                 head = nuevo;
-                back.next = head;
             }
         }
+
+        //Extrae el valor de la cabeza sin modificar nada
+        type pull()const{ return head->value; }
 
         type pop(int index) {
             //Validar vacios
@@ -97,6 +104,7 @@ class Linked_circular_list {
             return deleted_value;
         }
 
+        //Busca el indice de un valor supuestamente indexado
         int search(type val) const {
             Nodo<type>* current = head;
             int index = 0;
@@ -108,6 +116,7 @@ class Linked_circular_list {
             return -1;
         }
 
+        //Retorna el valor de un indice
         type get(int index) const {
             if (index < 0) throw std::out_of_range("Índice inválido");
             Nodo<type>* current = head;
@@ -118,20 +127,42 @@ class Linked_circular_list {
             return current->value;
         }
 
-        void mostrar() const {
-            if (head == head->next) {
-                std::cout << head->value << std::endl;
-                return;
-            }    
-            Nodo<type>* current = head;
-            std::cout << "[";
-            while (current) {
-                std::cout << current->value; 
-                if (current->next) std::cout << ", ";
-                current = current->next;
+        std::string mostrar() const {
+            if (!head) {
+                return "[]";
             }
-            std::cout << "]\n";
-        }
+            
+            // Usaremos un stringstream para construir la cadena de manera eficiente
+            std::stringstream ss;
+            ss << "[";
+            
+            // Caso de un solo nodo: head == head->next
+            if (head == head->next) {
+                // Asumiendo que 'type' puede ser insertado en un stream (std::cout o std::stringstream)
+                ss << head->value;
+                ss << "]";
+                return ss.str();
+            }
+            
+            Nodo<type>* current = head;
+            
+            // Recorremos la lista circular hasta que current vuelva a ser head
+            do {
+                // 1. Agregar el valor actual
+                ss << current->value;
+                
+                // 2. Moverse al siguiente nodo
+                current = current->next;
+                
+                // 3. Agregar la coma y el espacio si NO hemos llegado al final del ciclo (head)
+                if (current != head) {
+                    ss << ", ";
+                }
+            } while (current != head);
+            
+            ss << "]";
+            return ss.str();
+    }
 
 };
 
