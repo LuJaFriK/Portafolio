@@ -73,7 +73,7 @@ int main(){
             }
         }
         //Mostrar los participantes
-        else if(opc == 2) std:: cout<< ruleta.mostrar() << std::endl;
+        else if(opc == 2) std::cout << ruleta.mostrar() << std::endl;
         //Jugar
         else if (opc == 3) {
             while(ruleta.size()>1) std::cout << ruleta.kill() << std::endl;

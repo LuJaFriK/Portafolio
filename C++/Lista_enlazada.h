@@ -1,6 +1,7 @@
 #ifndef LINKEDLIST_H
 #define LINKEDLIST_H
 
+#include "Nodo.hpp"
 #include <iostream>
 #include <stdexcept>
 #include <string>
@@ -8,29 +9,12 @@
 
 
 template<typename type>
-class Linked_circular_list {
+class Linked_double_list {
     private:
+        Nodo_doble<type>* head;
+        Nodo_doble<type>* back;
         
-        struct Nodo {
-            type value;
-            Nodo* next;
-            Nodo* prev;
-            Nodo(type v, Nodo* next = nullptr,Nodo* prev = nullptr) : value(v), next(next),prev(prev) {}
-        };
-
-    protected:
-        
-        Nodo* head;
-        Nodo* back;
-
-        static void link(Nodo*back,Nodo*front){
-            //Si back es un nodo valido, lo enlaza con front
-            if(back) back->next = front;
-            //Si front es un nodo valido, lo enlaza con back
-            if(front) front->prev = back;
-        }
-
-        void remove(Nodo*& deleted_node) {
+        void remove(Nodo_doble<type>*& deleted_node) {
             //Solo un nodo
             if (deleted_node == head && deleted_node == back) {
                 head = nullptr;
@@ -57,15 +41,15 @@ class Linked_circular_list {
 
     public:
         
-        Linked_circular_list() : head(nullptr),back(nullptr){
+        Linked_double_list() : head(nullptr),back(nullptr){
             head->prev = back;
             back->next = head;
         }
 
-        virtual ~Linked_circular_list() {
-            Nodo* current = head;
+        virtual ~Linked_double_list() {
+            Nodo_doble<type>* current = head;
             while (current) {
-                Nodo* next = current->next;
+                Nodo_doble<type>* next = current->next;
                 delete current;
                 current = next;
             }
@@ -75,10 +59,10 @@ class Linked_circular_list {
 
         virtual void add(const type& value) {
             if(empty()){
-                head = new Nodo(value);
+                head = new Nodo_doble<type>(value);
                 back = head;
             }else{
-                Nodo* nuevo = new Nodo(value);
+                Nodo_doble<type>* nuevo = new Nodo_doble<type>(value);
                 link(nuevo, head);
                 head = nuevo;
             }
@@ -89,7 +73,7 @@ class Linked_circular_list {
             if (empty()) throw std::out_of_range("Lista vacía");
             if (index < 0) throw std::out_of_range("Índice inválido");
 
-            Nodo* deleted_node = head;
+            Nodo_doble<type>* deleted_node = head;
             //Encontrar el nodo 
             for(int i=0;i<index;i++){
                 if (deleted_node->next == head && i !=0) throw std::out_of_range("Índice fuera de rango");
@@ -103,7 +87,7 @@ class Linked_circular_list {
         }
 
         int search(const type& val) const {
-            Nodo* current = head;
+            Nodo_doble<type>* current = head;
             int index = 0;
             while (current) {
                 if (current->value == val) return index;
@@ -115,7 +99,7 @@ class Linked_circular_list {
 
         type get(const int& index) const {
             if (index < 0) throw std::out_of_range("Índice inválido");
-            Nodo* current = head;
+            Nodo_doble<type>* current = head;
             for (int i = 0; i < index; i++) {
                 if(current == nullptr)
                 current = current->next; throw std::out_of_range("Índice inválido");
@@ -124,7 +108,7 @@ class Linked_circular_list {
         }
 
         void print() const {
-            Nodo* current = head;
+            Nodo_doble<type>* current = head;
             std::cout << "[";
             while (current) {
                 std::cout << current->value; 
