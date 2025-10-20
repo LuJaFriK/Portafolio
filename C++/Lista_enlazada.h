@@ -14,7 +14,7 @@ class Linked_double_list {
         Nodo_doble<T>* head;
         Nodo_doble<T>* back;
         
-        void remove(Nodo_doble<type>*& deleted_node) {
+        void remove(Nodo_doble<T>*& deleted_node) {
             //Solo un nodo
             if (deleted_node == head && deleted_node == back) {
                 head = nullptr;
@@ -47,9 +47,9 @@ class Linked_double_list {
         }
 
         virtual ~Linked_double_list() {
-            Nodo_doble<type>* current = head;
+            Nodo_doble<T>* current = head;
             while (current) {
-                Nodo_doble<type>* next = current->next;
+                Nodo_doble<T>* next = current->next;
                 delete current;
                 current = next;
             }
@@ -57,37 +57,37 @@ class Linked_double_list {
 
         bool empty() const { return (head == nullptr); }
 
-        virtual void add(const type& value) {
+        virtual void add(const T& value) {
             if(empty()){
-                head = new Nodo_doble<type>(value);
+                head = new Nodo_doble<T>(value);
                 back = head;
             }else{
-                Nodo_doble<type>* nuevo = new Nodo_doble<type>(value);
+                Nodo_doble<T>* nuevo = new Nodo_doble<T>(value);
                 link(nuevo, head);
                 head = nuevo;
             }
         }
 
-        virtual type pop(const int& index) {
+        virtual T pop(const int& index) {
             //Validar vacios
             if (empty()) throw std::out_of_range("Lista vacía");
             if (index < 0) throw std::out_of_range("Índice inválido");
 
-            Nodo_doble<type>* deleted_node = head;
+            Nodo_doble<T>* deleted_node = head;
             //Encontrar el nodo 
             for(int i=0;i<index;i++){
                 if (deleted_node->next == head && i !=0) throw std::out_of_range("Índice fuera de rango");
                 deleted_node = deleted_node->next;
             }
 
-            type deleted_value = deleted_node->value;
+            T deleted_value = deleted_node->value;
             //Eliminar el puntero correctamente
             remove(deleted_node);
             return deleted_value;
         }
 
-        int search(const type& val) const {
-            Nodo_doble<type>* current = head;
+        int search(const T& val) const {
+            Nodo_doble<T>* current = head;
             int index = 0;
             while (current) {
                 if (current->value == val) return index;
@@ -97,9 +97,9 @@ class Linked_double_list {
             return -1;
         }
 
-        type get(const int& index) const {
+        T get(const int& index) const {
             if (index < 0) throw std::out_of_range("Índice inválido");
-            Nodo_doble<type>* current = head;
+            Nodo_doble<T>* current = head;
             for (int i = 0; i < index; i++) {
                 if(current == nullptr)
                 current = current->next; throw std::out_of_range("Índice inválido");
@@ -108,7 +108,7 @@ class Linked_double_list {
         }
 
         void print() const {
-            Nodo_doble<type>* current = head;
+            Nodo_doble<T>* current = head;
             std::cout << "[";
             while (current) {
                 std::cout << current->value; 
