@@ -2,11 +2,11 @@
 #include "InputUtils.hpp"
 #include "Nodo.hpp"
 #include <string>
-template<typename var>
+template<typename T>
 class Pila{
     private:
     
-        Nodo_simple<var>* tope;
+        Nodo_simple<T>* tope;
     public:
 
         Pila(){
@@ -19,28 +19,28 @@ class Pila{
         }
         
         Pila(const Pila& otra){
-            Nodo_simple<var>* otro = otra.tope;
-            Nodo_simple<var>* nuevo = nullptr;
+            Nodo_simple<T>* otro = otra.tope;
+            Nodo_simple<T>* nuevo = nullptr;
             while(otro != nullptr){
-                nuevo = new Nodo_simple<var>(otro->valor,nuevo);
+                nuevo = new Nodo_simple<T>(otro->valor,nuevo);
                 otro = otro->anterior;
             }
             this->tope = nuevo;
         }
 
-        void push(var valor){
-            tope = new Nodo_simple<var>(valor,tope);
+        void push(T valor){
+            tope = new Nodo_simple<T>(valor,tope);
         }
 
-        var pull(){
+        T pull(){
             if (empty()) throw std::runtime_error("Pila vacía"); 
             return tope->value;
         }
 
-        var pop(){
+        T pop(){
             if (empty()) throw std::runtime_error("Pila vacía"); 
-            Nodo_simple<var>* eliminar = tope;
-            var val = eliminar->getValue();
+            Nodo_simple<T>* eliminar = tope;
+            T val = eliminar->getValue();
             tope = tope->getNext();
             delete eliminar;
             return val;
@@ -49,7 +49,7 @@ class Pila{
         bool empty()const{ return (tope == nullptr); }
         
         std::string to_string() const {
-            return Nodo_simple<var>::to_string(tope);
+            return Nodo_to_string(tope);
         }
 
     

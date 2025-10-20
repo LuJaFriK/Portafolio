@@ -6,13 +6,13 @@
 #include <stdexcept>
 #include <string>
 
-template<typename type>
+template<typename T>
 class Linked_circular_list {
     private:
-        Nodo_doble<type>* head;
-        Nodo_doble<type>* back; 
+        Nodo_doble<T>* head;
+        Nodo_doble<T>* back; 
         
-        void remove(Nodo_doble<type>*& deleted_node) {
+        void remove(Nodo_doble<T>*& deleted_node) {
             //Solo un nodo
             if (deleted_node == head && deleted_node == back) {
                 head = nullptr;
@@ -48,10 +48,10 @@ class Linked_circular_list {
             
             back->setNext(nullptr); 
 
-            Nodo_doble<type>* current = head;
+            Nodo_doble<T>* current = head;
             while (current) {
                 // FIX: Usar getter
-                Nodo_doble<type>* next = current->getNext(); 
+                Nodo_doble<T>* next = current->getNext(); 
                 delete current;
                 current = next;
             }
@@ -59,9 +59,9 @@ class Linked_circular_list {
 
         bool empty() const { return (head == nullptr); }
 
-        virtual void add(const type& value) {
+        virtual void add(const T& value) {
             
-            Nodo_doble<type>* nuevo = new Nodo_doble<type>(value);
+            Nodo_doble<T>* nuevo = new Nodo_doble<T>(value);
             
             if(empty()){
                 head = nuevo;
@@ -76,29 +76,29 @@ class Linked_circular_list {
             }
         }
         
-        type pull()const{
+        T pull()const{
             if (empty()) throw std::out_of_range("Lista vacía");
             return head->getValue();
         }
 
-        virtual type pop(const int& index) {
+        virtual T pop(const int& index) {
             if (empty()) throw std::out_of_range("Lista vacía");
             if (index < 0) throw std::out_of_range("Índice inválido");
 
-            Nodo_doble<type>* deleted_node = head;
+            Nodo_doble<T>* deleted_node = head;
             for(int i=0; i < index; i++){
                 deleted_node = deleted_node->getNext(); ;
             }
 
-            type deleted_value = deleted_node->getValue(); 
+            T deleted_value = deleted_node->getValue(); 
             remove(deleted_node);
             return deleted_value;
         }
 
-        int search(const type& val) const {
+        int search(const T& val) const {
             if(empty()) return -1;
             
-            Nodo_doble<type>* current = head;
+            Nodo_doble<T>* current = head;
             int index = 0;
 
             do {
@@ -110,11 +110,11 @@ class Linked_circular_list {
             return -1;
         }
 
-        type get(const int& index) const {
+        T get(const int& index) const {
             if (empty()) throw std::out_of_range("Lista vacía");
             if (index < 0) throw std::out_of_range("Índice inválido");
 
-            Nodo_doble<type>* current = head;
+            Nodo_doble<T>* current = head;
             
             for (int i = 0; i < index; i++) {
                 current = current->getNext(); 
@@ -124,7 +124,7 @@ class Linked_circular_list {
             return current->getValue(); 
         }
 
-        std::string mostrar() const { return to_string(head); }
+        std::string mostrar() const { return Nodo_to_string(head); }
 
 };
 

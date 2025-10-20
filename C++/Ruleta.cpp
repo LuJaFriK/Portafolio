@@ -63,27 +63,28 @@ int main(){
     Ruleta ruleta(players);
     //Menu de juego
     while(true){
-        int opc = input<int>("1. Ingresar un jugador.\n2. Mostrar todos los participantes.\n3. Jugar a la ruleta.\n4. Terminar el juego.\n");
-        if (opc == 1){
-            try {
-                std::string nombre = input<std::string>("Ingresa el dato: ");
-                ruleta.add(nombre);
-            } catch (std::out_of_range) {
-                std::cout<< "Ya se encuentran todos los jugadores."<<std::endl;
-            }
+        
+        switch(input<int>("Seleccione una opción: \n1. Agregar jugador\n2. Mostrar jugadores\n3. Jugar\n4. Salir")){
+            case 1:
+                try {
+                    std::string nombre = input<std::string>("Ingresa el dato: ");
+                    ruleta.add(nombre);
+                } catch (std::out_of_range) {
+                    std::cout<< "Ya se encuentran todos los jugadores."<<std::endl;
+                }
+                break;
+            case 2:
+                std::cout << ruleta.mostrar() << std::endl;
+                break;
+            case 3:
+                while(ruleta.size()>1) std::cout << ruleta.kill() << std::endl;
+                std::cout << ruleta.kill() << std::endl; 
+                break;
+            case 4:
+                return 0;
+            default:
+                std::cout<<"Error. opción no válida."<<std::endl;   
         }
-        //Mostrar los participantes
-        else if(opc == 2) std::cout << ruleta.mostrar() << std::endl;
-        //Jugar
-        else if (opc == 3) {
-            while(ruleta.size()>1) std::cout << ruleta.kill() << std::endl;
-            
-            std::cout << ruleta.kill() << std::endl; 
-        } 
-        //Terminar el juego
-        else if(opc == 4) return 0;
-        //Default
-        else std::cout<<"Error. opción no válida."<<std::endl;   
     }
 
     return 0;

@@ -1,13 +1,13 @@
 #include <iostream>
 #include <stdexcept>
-template <typename var>
+template <typename T>
 class Tree{
     private:
         struct Nodo{
-            var val;
+            T val;
             Nodo* left;
             Nodo* right;
-            Nodo(var val):val(val),left(nullptr),right(nullptr){}
+            Nodo(T val):val(val),left(nullptr),right(nullptr){}
         };
 
         Nodo* root;
@@ -26,7 +26,7 @@ class Tree{
 
         }
 
-        static Nodo* add_recursivo(Nodo* current,var nuevo){
+        static Nodo* add_recursivo(Nodo* current,T nuevo){
             if (current == nullptr) return new Nodo(nuevo);
 
             if (current->val == nuevo) throw std::invalid_argument("El valor ya se encuentra en el arbol");
@@ -53,7 +53,7 @@ class Tree{
 
         ~Tree(){}
 
-        void add(var val){
+        void add(T val){
             root = add_recursivo(root, val);
             length++;
         }

@@ -1,111 +1,40 @@
 #include <string>
 #include <iostream>
 #include <stdexcept>
-
-template<typename var>
-class Cola{
-    private:
-        struct Nodo{
-            var valor;
-            Nodo* next;
-            Nodo(var val):valor(val),next(nullptr){}
-        };
-
-        Nodo* head;
-        Nodo* back;
-
-
-    public:
-        Cola():head(nullptr),back(nullptr){}
-
-        ~Cola(){
-            while(!empty()) desencolar();
-        }
-
-        bool empty() const {
-            return (head == nullptr);
-        }
-
-        void mostrar(){
-            Nodo* current = head;
-            while(current!=nullptr){
-                std::cout<<current->valor<<std::endl;
-
-                current = current->next;
-            }
-        }
-
-        void encolar(var valor){
-            Nodo* nuevo = new Nodo(valor);
-            if(empty()){
-                head = nuevo;
-                back = nuevo;
-            }else{
-                back->next = nuevo;
-                back = back->next;
-            }
-        }
-
-        var pull()const{
-            if(empty()) throw std::out_of_range("No hay elementos en la cola.");
-
-            return head->valor;
-        }
-
-        var desencolar(){
-
-            if(empty()) throw std::out_of_range("No hay elementos en la cola.");
-
-            const var val = head->valor;
-            
-            Nodo*del = head;
-            head = head->next;
-            delete del;
-
-            if(head==nullptr) back = nullptr;
-
-            return val;
-
-        }
-};
-
-int menu(){
-    int opcion;
-    std::cout<<"1. Ingresar un dato."<<std::endl;
-    std::cout<<"2. Mostrar los datos en el largo."<<std::endl;
-    std::cout<<"3. Eliminar un dato."<<std::endl;
-    std::cin>> opcion;
-    return opcion;
-
-}
+#include "InputUtils.hpp"
+#include "Cola.hpp"
 
 int main(){
     Cola<std::string> cola{};
     while(true){
-        int opc = menu();
-        if (opc == 1){
-            try {
-                std::string nombre;
-                std::cout<<"Ingresa el dato: ";
-                std::cin>> nombre;
-                cola.encolar(nombre);
-            } catch (std::out_of_range) {
-                std::cout<< "La cola esta llena"<<std::endl;
-            }
+        switch(input<int>("1.Ingresar un nombre.\n2.Mostrar los datos en el largo.\n3.Eliminar un dato.\n4.Salir\n")){
+            case 1:
+                try {
+                    std::string nombre;
+                    std::cout<<"Ingresa el dato: ";
+                    std::cin>> nombre;
+                    cola.encolar(nombre);
+                } catch (std::out_of_range) {
+                    std::cout<< "La cola esta llena"<<std::endl;
+                }
+            break;
+            case 2:
+                std::cout << cola.mostrar()<<std::endl;
+            break;
+            case 3:
+                try {
+                    std::cout<<cola.desencolar()<<" eliminado."<<std::endl;
+                } catch (std::out_of_range) {
+                    std::cout<< "La cola esta vacia"<<std::endl;
+                }
+            break;
+            case 4:
+                std::cout<<"Saliendo..."<<std::endl;
+            return 0;
+            default:
+                std::cout<<"Error. opción no válida."<<std::endl;
+            break;
         }
-        else if(opc == 2) cola.mostrar();
-        else if (opc == 3){
-            try {
-                std::cout<<cola.desencolar()<<" eliminado."<<std::endl;
-            } catch (std::out_of_range) {
-                std::cout<< "La cola esta vacia"<<std::endl;
-            }
-        }else if(opc == 4) return 0;
-        else{
-            std::cout<<"Error. opción no válida."<<std::endl;
-        }
-
-        
     }
     return 0;
 }

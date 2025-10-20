@@ -1,19 +1,19 @@
 #include <iostream>
 #include <stdexcept>
 #include <string>
-template <typename var>
+template <typename T>
 class Cola{
     private:
 
         int in;
         int out;
         int length;
-        var* Data;
+        T* Data;
 
     public:
 
         Cola(int length):in(0),out(0),length(length+1){
-            Data = new var[length];
+            Data = new T[length];
         }
 
         ~Cola(){
@@ -28,22 +28,22 @@ class Cola{
             return ((in + 1) % length == out);
         }
 
-        void encolar(var val){
+        void encolar(T val){
             if (full()) throw std::out_of_range("La cola está llena.");
             Data[in] = val;
             in = (in+1) % length;
         }
 
-        var show()const{
+        T show()const{
             if(empty()) throw std::out_of_range("La cola está vacía.");
             
             return Data[out];
         }
 
-        var desencolar(){
+        T desencolar(){
             if(empty()) throw std::out_of_range("La cola está vacía.");
 
-            const var val = Data[out];
+            const T val = Data[out];
             out = (out+1) % length;
             return val;
         }

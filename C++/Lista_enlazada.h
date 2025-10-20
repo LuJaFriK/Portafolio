@@ -8,11 +8,11 @@
 
 
 
-template<typename type>
+template<typename T>
 class Linked_double_list {
     private:
-        Nodo_doble<type>* head;
-        Nodo_doble<type>* back;
+        Nodo_doble<T>* head;
+        Nodo_doble<T>* back;
         
         void remove(Nodo_doble<type>*& deleted_node) {
             //Solo un nodo

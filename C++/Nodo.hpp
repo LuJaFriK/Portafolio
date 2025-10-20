@@ -53,7 +53,7 @@ void link(Nodo_doble<T>* back, Nodo_doble<T>* front) {
 }
 
 template <typename T>
-std::string to_string(Nodo_simple<T>* head) {
+std::string Nodo_to_string(Nodo_simple<T>* head) {
     if (!head) return "[]";
 
     std::ostringstream oss;
