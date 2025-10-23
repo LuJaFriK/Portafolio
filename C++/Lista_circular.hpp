@@ -1,7 +1,6 @@
 #ifndef LINKEDLIST_H
 #define LINKEDLIST_H
 
-// Asumo que tu archivo de nodos se llama "Nodo.hpp" como indicaste
 #include "Nodo.hpp" 
 #include <stdexcept>
 #include <string>
@@ -36,7 +35,9 @@ class Linked_circular_list {
 
                 link(deleted_node->getPrev(), deleted_node->getNext());
             }
+            head = deleted_node->getNext();
             delete deleted_node;
+            
         }
 
 

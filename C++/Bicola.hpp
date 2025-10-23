@@ -1,113 +1,112 @@
-#include "Cola.hpp"
+#pragma once
+
+#include "Nodo.hpp"
 #include <stdexcept>
 #include <string>
-
-struct Bool{
-    private:
-        bool value;
-    public:
-        Bool(bool boolean):value(boolean){}
-        bool get(){return value;}
-};
+#include <optional>
 
 template<typename T>
-class Bicola : public Cola<T>{
+class Bicola {
+private:
+    Nodo_doble<T>* head;
+    Nodo_doble<T>* back;
+    std::optional<bool> restriccion_entrada; // true for front, false for back
+    std::optional<bool> restriccion_salida; // true for front, false for back
 
-    private:
-        
-        bool restriccion(bool alternate, bool queue_or_unqueue) {
-            // Si no hay restricciones o si la operación no es alternativa, es factible.
-            if (entrada_or_salida == nullptr || !alternate) return true;
-
-            //En caso de ser alternativa o restrictiva, la operacion es factible mientras el nodo entre por el lado distinto al restricto
-            return queue_or_unqueue != entrada_or_salida->get();
-        }
-        Bool* entrada_or_salida;
-
-
-    public:
-        Bicola(bool entrada_or_salida):Cola<T>(),entrada_or_salida(new Bool(entrada_or_salida)){}
-
-        Bicola():Cola<T>(),entrada_or_salida(nullptr){}
-
-        ~Bicola(){ delete entrada_or_salida; }
-
-        bool empty() const {return (this->head == nullptr && this->back == nullptr);}
-
-        void encolar(T valor,bool alternate){
-            Nodo_doble<T>* nuevo = new Nodo_doble<T>(valor);
-
-            //Si es infactible entonces !false == true 
-            if (!restriccion(alternate,true)) throw std::invalid_argument("La cola es restrictiva de entrada.");
-
-            //Dado que es factible:
-
-            if(empty()) {
-                this->head = nuevo;
-                this->back = nuevo;
-                return;
+    bool es_operacion_restringida(bool from_front, bool encolando) const {
+        if (encolando) {
+            if (!restriccion_entrada.has_value()) {
+                return false; // No restrictions
             }
+            return restriccion_entrada.value() == from_front;
+        } else { // Desencolando
+            if (!restriccion_salida.has_value()) {
+                return false; // No restrictions
+            }
+            return restriccion_salida.value() == from_front;
+        }
+    }
 
-            if(alternate){//Si quiere encolar por arriba
-                
-                link(nuevo,this->head);
-                this->head = nuevo;
+public:
+    Bicola() : head(nullptr), back(nullptr) {}
+    Bicola(std::optional<bool> re, std::optional<bool> rs) : head(nullptr), back(nullptr), restriccion_entrada(re), restriccion_salida(rs) {}
 
-            }else{//Si quiere encolar por abajo
-
-                link(this->back,nuevo);
-                this->back = nuevo;
+    ~Bicola() {
+        while (!empty()) {
+            try {
+                desencolar(true);
+            } catch (const std::invalid_argument&) {
+                try {
+                    desencolar(false);
+                } catch (const std::invalid_argument&) {
+                    // Should not happen if logic is correct
+                }
             }
         }
+    }
 
-        T pull(bool alternate)const{
-            if(empty()) throw std::out_of_range("No hay elementos en la cola.");
-            
-            //Si es infactible entonces !false == true
-            if(!restriccion(alternate,false)) throw std::invalid_argument("La cola es restrictiva de salida.");
+    bool empty() const {
+        return head == nullptr;
+    }
 
-            //Si quiere sacar de abajo
-            if(alternate) return this->back->valor;
-            //Si quiere sacar de arriba
-            else return this->head->valor;
+    void encolar(T valor, bool from_front) {
+        if (es_operacion_restringida(from_front, true)) {
+            throw std::invalid_argument("Operación de encolar restringida en este extremo.");
         }
 
-        T desencolar(bool alternate){
-            if(empty()) throw std::out_of_range("No hay elementos en la cola.");
+        Nodo_doble<T>* nuevo = new Nodo_doble<T>(valor);
+        if (empty()) {
+            head = back = nuevo;
+        } else if (from_front) {
+            link(nuevo, head);
+            head = nuevo;
+        } else {
+            link(back, nuevo);
+            back = nuevo;
+        }
+    }
 
-            //Si es infactible entonces !false == true
-            if (!restriccion(alternate,false)) throw std::invalid_argument("La cola es restrictiva de salida.");
-            
-            //Dado que es factible:
+    T desencolar(bool from_front) {
+        if (empty()) {
+            throw std::out_of_range("La bicola está vacía.");
+        }
 
-            Nodo_doble<T>* del;
-            if (this->head == this->back) { // si solo queda un nodo
-                del = this->head;
-                this->head = nullptr;
-                this->back = nullptr;
+        if (es_operacion_restringida(from_front, false)) {
+            throw std::invalid_argument("Operación de desencolar restringida en este extremo.");
+        }
+
+        Nodo_doble<T>* nodo_a_eliminar;
+        if (from_front) {
+            nodo_a_eliminar = head;
+            head = head->getNext();
+            if (head) {
+                head->setPrev(nullptr);
+            } else {
+                back = nullptr; // La cola quedó vacía
             }
-            else if(alternate){
-                //Asigna el nodo a eliminar
-                del = this->back;
-                //Retroceder de nodo
-                this->back = this->back->getPrev();
-                //cortar el enlace
-                if (this->back) this->back->setNext(nullptr);
-           }else{
-                //Asigna el nodo a eliminar
-                del = this->head;
-                //Avanzar de nodo
-                this->head = this->head->getNext();
-                //cortar el enlace
-                if(this->head) this->head->setPrev(nullptr);
-           }
-           //Asigna el valor a retornar
-           T val = del->getValue();
-           //Elimina el nodo y retorna
-           delete del;
-           return val;
-
+        } else {
+            nodo_a_eliminar = back;
+            back = back->getPrev();
+            if (back) {
+                back->setNext(nullptr);
+            } else {
+                head = nullptr; // La cola quedó vacía
+            }
         }
 
-        std::string mostrar()const{ return Nodo_to_string(this->head); }
+        T valor = nodo_a_eliminar->getValue();
+        delete nodo_a_eliminar;
+        return valor;
+    }
+
+    T peek(bool from_front) const {
+        if (empty()) {
+            throw std::out_of_range("La bicola está vacía.");
+        }
+        return from_front ? head->getValue() : back->getValue();
+    }
+
+    std::string mostrar() const {
+        return Nodo_to_string(head);
+    }
 };

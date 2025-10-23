@@ -14,6 +14,7 @@ class Nodo_simple {
     public:
         //Constructores
         Nodo_simple(T value, Nodo_simple* next = nullptr) : value(value) , next(next) {}
+        Nodo_simple(Nodo_simple<T>* next = nullptr):value(T()),next(next){}
         //Destructor
         virtual ~Nodo_simple() {}
         //Constructor de copia
@@ -24,6 +25,12 @@ class Nodo_simple {
         
         Nodo_simple* getNext() const { return next; }
         void setNext(Nodo_simple* next) { this->next = next; }
+
+        virtual std::string to_string(){
+            std::stringstream ss;
+            ss << value;
+            return ss.str();
+        }
 };
 
 template <typename T>
@@ -32,7 +39,10 @@ class Nodo_doble : public Nodo_simple<T> {
         Nodo_doble* prev;
     public:
         Nodo_doble(T value, Nodo_doble* prev = nullptr, Nodo_doble* next = nullptr) 
-            : Nodo_simple<T>(value, next), prev(prev) {} // 'next' (Nodo_doble*) se convierte a Nodo_simple*
+        : Nodo_simple<T>(value, next), prev(prev) {} // 'next' (Nodo_doble*) se convierte a Nodo_simple*
+        
+        //Constructor sin atributos
+        Nodo_doble(Nodo_doble<T>* prev = nullptr,Nodo_doble<T>* next = nullptr):Nodo_simple<T>(next),prev(prev){}
         //Destructor
         ~Nodo_doble() {}
         //Constructor de copia
@@ -47,6 +57,21 @@ class Nodo_doble : public Nodo_simple<T> {
 };
 
 template <typename T>
+class Nodo_dict : public Nodo_doble<T>{
+    public:
+        const std::string address;
+
+        Nodo_dict(std::string name):Nodo_doble<T>(),address(name){}
+        ~Nodo_dict(){}
+
+        std::string to_string()override{
+            std::stringstream ss;
+            ss << address << ':' << this->getValue();
+            return ss.str();
+        }
+};
+
+template <typename T>
 void link(Nodo_doble<T>* back, Nodo_doble<T>* front) {
     if (back) back->setNext(front);
     if (front) front->setPrev(back);
@@ -56,18 +81,19 @@ template <typename T>
 std::string Nodo_to_string(Nodo_simple<T>* head) {
     if (!head) return "[]";
 
-    std::ostringstream oss;
-    oss << "[";
+    std::stringstream ss;
+    ss << "[";
     Nodo_simple<T>* current = head;
-
-    do {
-        oss << current->getValue(); 
-        current = current->getNext();
-        if (current && current != head) oss << ", ";
-    } while (current && current != head); 
     
-    oss << "]";
-    return oss.str();
+    do {
+        if (current->getNext()!=head) ss << ", ";
+        ss << current->getValue(); 
+        current = current->getNext();
+        
+    } while (current != head); 
+    
+    ss << "]";
+    return ss.str();
 }
 
 #endif

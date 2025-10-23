@@ -13,7 +13,7 @@ class Ruleta : public Linked_circular_list<std::string>{
 
         int random_index() const {
             static thread_local std::mt19937 gen(std::random_device{}());
-            std::uniform_int_distribution<int> dis(0, counter); 
+            std::uniform_int_distribution<int> dis(0, 5); 
             return dis(gen);
         }
 
@@ -37,7 +37,8 @@ class Ruleta : public Linked_circular_list<std::string>{
             
             std::string eliminado = this->pop(index);
             counter--; 
-            return "El jugador: " + eliminado +" ha perdido.";
+            return "El jugador "+ std::to_string(index) +":" + eliminado +" ha perdido.";
+
         }
 
         int size()const{ return counter; }
@@ -49,10 +50,8 @@ class Ruleta : public Linked_circular_list<std::string>{
             }
             else throw std::out_of_range("Juego lleno");
             
+            
         }
-
-
-
 
 };
 //input agregado
@@ -64,7 +63,7 @@ int main(){
     //Menu de juego
     while(true){
         
-        switch(input<int>("Seleccione una opción: \n1. Agregar jugador\n2. Mostrar jugadores\n3. Jugar\n4. Salir")){
+        switch(input<int>("Seleccione una opción: \n1. Agregar jugador\n2. Mostrar jugadores\n3. Jugar\n4. Salir\n")){
             case 1:
                 try {
                     std::string nombre = input<std::string>("Ingresa el dato: ");
@@ -83,7 +82,8 @@ int main(){
             case 4:
                 return 0;
             default:
-                std::cout<<"Error. opción no válida."<<std::endl;   
+                std::cout<<"Error. opción no válida."<<std::endl;
+            break;   
         }
     }
 
