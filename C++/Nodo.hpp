@@ -4,7 +4,6 @@
 #include <string>
 #include <sstream> 
 
-//Nodo simple
 template <typename T>
 class Nodo_simple {
     //Atributos
@@ -13,8 +12,7 @@ class Nodo_simple {
         Nodo_simple* next;
     public:
         //Constructores
-        Nodo_simple(T value, Nodo_simple* next = nullptr) : value(value) , next(next) {}
-        Nodo_simple(Nodo_simple<T>* next = nullptr):value(T()),next(next){}
+        Nodo_simple(T value = T(), Nodo_simple* next = nullptr) : value(value) , next(next) {}
         //Destructor
         virtual ~Nodo_simple() {}
         //Constructor de copia
@@ -38,31 +36,35 @@ class Nodo_doble : public Nodo_simple<T> {
     private:    
         Nodo_doble* prev;
     public:
-        Nodo_doble(T value, Nodo_doble* prev = nullptr, Nodo_doble* next = nullptr) 
+        Nodo_doble(T value = T(), Nodo_doble* prev = nullptr, Nodo_doble* next = nullptr) 
         : Nodo_simple<T>(value, next), prev(prev) {} // 'next' (Nodo_doble*) se convierte a Nodo_simple*
         
-        //Constructor sin atributos
-        Nodo_doble(Nodo_doble<T>* prev = nullptr,Nodo_doble<T>* next = nullptr):Nodo_simple<T>(next),prev(prev){}
         //Destructor
         ~Nodo_doble() {}
         //Constructor de copia
         Nodo_doble(const Nodo_doble& other) : Nodo_simple<T>(other), prev(nullptr) {}
         
-        Nodo_doble* getNext() { 
-            return static_cast<Nodo_doble*>(Nodo_simple<T>::getNext()); 
-        }
+         Nodo_doble* getNext() const { return static_cast<Nodo_doble*>(Nodo_simple<T>::getNext()); }
         
         Nodo_doble* getPrev() const { return prev; }
         void setPrev(Nodo_doble* p) { this->prev = p; }
 };
 
-template <typename T>
+template </*Referencia*/typename U,/*Dato interno*/typename T>
 class Nodo_dict : public Nodo_doble<T>{
     public:
-        const std::string address;
+        const U address;
 
-        Nodo_dict(std::string name):Nodo_doble<T>(),address(name){}
+        Nodo_dict(U address,T value = T(), Nodo_dict* prev = nullptr, Nodo_dict* next = nullptr):Nodo_doble<T>(value, prev, next),address(address){}
         ~Nodo_dict(){}
+        
+        Nodo_dict* getNext() const {
+                    return static_cast<Nodo_dict*>(Nodo_simple<T>::getNext());
+                }
+        
+        Nodo_dict* getPrev() const {
+                    return static_cast<Nodo_dict*>(Nodo_doble<T>::getPrev());
+        }
 
         std::string to_string()override{
             std::stringstream ss;
@@ -86,13 +88,42 @@ std::string Nodo_to_string(Nodo_simple<T>* head) {
     Nodo_simple<T>* current = head;
     
     do {
-        if (current->getNext()!=head) ss << ", ";
-        ss << current->getValue(); 
+        
+        ss << current->getValue();
+        if (current!=head) ss << ", "; 
         current = current->getNext();
         
     } while (current != head); 
     
     ss << "]";
+    return ss.str();
+}
+
+template </*Referencia*/typename U,/*Dato interno*/typename T>
+std::string Nodo_to_string(Nodo_dict<U,T>* head) { 
+    if (!head) return "{}"; 
+
+    std::stringstream ss;
+    ss << "{";
+    Nodo_dict<U,    T>* current = head;
+    
+    
+    
+    do {
+       
+        ss << current->to_string(); 
+        
+        
+        current = current->getNext();
+        
+        if (current != head) {
+           
+            ss << ", "; 
+        }
+        
+    } while (current != head); 
+    
+    ss << "}";
     return ss.str();
 }
 
