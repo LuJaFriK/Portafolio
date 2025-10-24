@@ -9,7 +9,7 @@ template </*Referencia*/typename U,/*Dato interno*/typename T>
 class Diccionario {
     private:
 
-        Nodo_dict<U,T>* search(const U& name){
+        Nodo_dict<U,T>* search(const U& name)const{
             //Si la lista está vacía, no hay nada que buscar
             if(head == nullptr) return nullptr;
             //Buscar en la lista
@@ -57,22 +57,21 @@ class Diccionario {
         bool empty()const{ return head == nullptr; }
 
         void set(const U& name, const T& value){
-            Nodo_dict<U,T>* to_set = search(name);
+            Nodo_dict<U,T>* nodo = search(name);
             //Caso existente
-            if(to_set) {
-                to_set->setValue(value);
+            if(nodo) {
+                nodo->setValue(value);
             //Caso no existente
             }else{
-                Nodo_dict<U,T>* nuevo = new Nodo_dict<U,T>(name,value);
-                nuevo->setValue(value);
+                nodo = new Nodo_dict<U,T>(name,value);
                 //Caso vacío
                 if(!head){
-                    head = nuevo;
-                    back = nuevo;
+                    head = nodo;
+                    back = nodo;
                 //Caso encolar
                 }else{
-                    link(back, nuevo);
-                    back = nuevo;
+                    link(back, nodo);
+                    back = nodo;
                 }
                 //De cualquier modo, enlazar el nuevo nodo con el primero
                 link(back,head);
