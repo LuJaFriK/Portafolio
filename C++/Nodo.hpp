@@ -50,6 +50,34 @@ class Nodo_doble : public Nodo_simple<T> {
         void setPrev(Nodo_doble* p) { this->prev = p; }
 };
 
+template <typename T>
+class Nodo_Tree : public Nodo_simple<T>{
+    private:
+        Nodo_Tree* parent;
+    public:
+        Nodo_Tree(T value = T(), Nodo_Tree* next = nullptr): Nodo_simple<T>(value, next){}
+        ~Nodo_Tree(){}
+        
+        Nodo_Tree* getNext() const {
+            return static_cast<Nodo_Tree*>(Nodo_simple<T>::getNext());
+        }
+        
+        Nodo_Tree* getPrev() const {
+            return static_cast<Nodo_Tree*>(Nodo_simple<T>::getPrev());
+        }
+        
+        Nodo_Tree* getParent() const { return parent; }
+        
+        void setParent(Nodo_Tree* p) { this->parent = p; }
+        
+        
+        std::string to_string()override{
+            std::stringstream ss;
+            ss << this->getValue();
+            return ss.str();
+        }
+};
+
 template </*Referencia*/typename U,/*Dato interno*/typename T>
 class Nodo_dict : public Nodo_doble<T>{
     public:

@@ -8,8 +8,9 @@
 template <typename T>
 class Arbol{
     protected:
-        Nodo_doble<T>* root;
+        Nodo_Tree<T>* root;
     private:
+        Nodo_Tree<T>* place(T value,Nodo_Tree<T>* parent);
     public:
         Arbol():root(nullptr){}
         ~Arbol(){}
@@ -17,12 +18,18 @@ class Arbol{
         
         bool empty(){ return root == nullptr; }
         
-        void insertar(T valor){
-            if(empty()) root = new Nodo_doble<T>(valor);
-            
+        void set(T valor){
+            if(empty()) root = new Nodo_Tree<T>(valor);
+            else Nodo_Tree<T>* nuevo = place(valor,root);
         }
         
-        T obtenerRaiz(){ return root->valor; }
+        T get(){ return root->getValue(); }
+        
+        T pop(){
+            T value = root->getValue();
+
+            return value;
+        }
         
         std::string mostrar(){
             std::stringstream ss;
