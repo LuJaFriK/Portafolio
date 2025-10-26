@@ -41,7 +41,7 @@ class Pila {
         }
         //ingresa un nuevo dato
         void push(const int dato){
-                Data[++SP] = dato;
+            Data[++SP] = dato;
         }
         //Elimina y retorna un dato de la pila
         int pop(){ 

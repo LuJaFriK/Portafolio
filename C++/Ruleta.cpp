@@ -26,18 +26,15 @@ class Ruleta : public Linked_circular_list<std::string>{
 
         std::string kill() {
             
-            if (counter <= 0) {
-                return "No hay personas jugando.";
-            }
-            if (counter == 1) { 
-                return "El ganador es: " + this->pull()+".";
-            }
+            if (counter <= 0) return "No hay personas jugando.";
+            
+            if (counter == 1) return "El ganador es: " + this->pull()+".";
             
             int index = random_index();
             
             std::string eliminado = this->pop(index);
             counter--; 
-            return "El jugador "+ std::to_string(index) +":" + eliminado +" ha perdido.";
+            return "El jugador "+ std::to_string(index+1) +":" + eliminado +" ha perdido.";
 
         }
 

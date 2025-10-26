@@ -1,13 +1,13 @@
 #ifndef LINKEDLIST_H
 #define LINKEDLIST_H
 
-#include "Nodo.hpp" 
+#include "Data_structure.hpp"
 #include <stdexcept>
 #include <string>
 
 template<typename T>
-class Linked_circular_list {
-    private:
+class Linked_circular_list : public data_structure<T> {
+    protected:
         Nodo_doble<T>* head;
         Nodo_doble<T>* back; 
         
@@ -35,32 +35,37 @@ class Linked_circular_list {
 
                 link(deleted_node->getPrev(), deleted_node->getNext());
             }
+            //Esta linea exacta es la que deja al siguiente como jugador principal
             head = deleted_node->getNext();
             delete deleted_node;
             
+        }
+
+        T pull()const{
+            if (empty()) throw std::out_of_range("Lista vacía");
+            return head->getValue();
         }
 
 
     public:
         Linked_circular_list() : head(nullptr), back(nullptr) { }
 
-        virtual ~Linked_circular_list() {
+        virtual ~Linked_circular_list() override {
             if (empty()) return;
             
             back->setNext(nullptr); 
 
             Nodo_doble<T>* current = head;
             while (current) {
-                // FIX: Usar getter
                 Nodo_doble<T>* next = current->getNext(); 
                 delete current;
                 current = next;
             }
         }
 
-        bool empty() const { return (head == nullptr); }
+        bool empty() const override { return (head == nullptr); }
 
-        virtual void add(const T& value) {
+        void add(const T& value) {
             
             Nodo_doble<T>* nuevo = new Nodo_doble<T>(value);
             
@@ -76,11 +81,6 @@ class Linked_circular_list {
                 head = nuevo;
             }
         }
-        
-        T pull()const{
-            if (empty()) throw std::out_of_range("Lista vacía");
-            return head->getValue();
-        }
 
         virtual T pop(const int& index) {
             if (empty()) throw std::out_of_range("Lista vacía");
@@ -88,7 +88,7 @@ class Linked_circular_list {
 
             Nodo_doble<T>* deleted_node = head;
             for(int i=0; i < index; i++){
-                deleted_node = deleted_node->getNext(); ;
+                deleted_node = deleted_node->getNext(); 
             }
 
             T deleted_value = deleted_node->getValue(); 
@@ -125,7 +125,7 @@ class Linked_circular_list {
             return current->getValue(); 
         }
 
-        std::string mostrar() const { return Nodo_to_string(head); }
+        std::string mostrar() const { return this->to_string(head); }
 
 };
 

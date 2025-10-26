@@ -1,12 +1,12 @@
 #ifndef ARBOL_H
 #define ARBOL_H
 
-#include "Nodo.hpp"
+#include "Data_structure.hpp"
 #include <string>
 #include <sstream>
 
 template <typename T>
-class Arbol{
+class Arbol : data_structure<T>{
     protected:
         Nodo_Tree<T>* root;
     private:
@@ -31,7 +31,7 @@ class Arbol{
             return value;
         }
         
-        std::string mostrar(){
+        std::string mostrar() override {
             std::stringstream ss;
 
             return ss.str();

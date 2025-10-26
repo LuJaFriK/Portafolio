@@ -1,18 +1,20 @@
+#ifndef PILADINAMICA_H
+#define PILADINAMICA_H
+
 #include <iostream>
 #include "InputUtils.hpp"
-#include "Nodo.hpp"
+#include "Data_structure.hpp"
 #include <string>
 template<typename T>
-class Pila{
-    private:
-    
+class Pila : data_structure<T>{
+    protected:
         Nodo_simple<T>* tope;
     public:
 
         Pila(){
             tope = nullptr;
         }
-        ~Pila(){
+        ~Pila()override{
             while(!empty()){
                 pop();
             }
@@ -46,38 +48,13 @@ class Pila{
             return val;
         }
 
-        bool empty()const{ return (tope == nullptr); }
+        bool empty()const override{ return (tope == nullptr); }
         
-        std::string to_string() const {
-            return Nodo_to_string(tope);
+        std::string mostrar() const override {
+            return this->to_string(tope);
         }
 
     
 };
 
-int main(){
-    Pila<std::string> pila{};
-    while (true) {
-        switch(input<int>("1. Ingresar un dato.\n2. Mostrar los datos en el largo.\n3. Eliminar un dato.\n4. Salir.\n")){
-            case 1:
-                pila.push(input<std::string>("Ingrese un dato: "));
-                break;
-            case 2:
-                
-                break;
-            case 3:
-                try{
-                    pila.pop();
-                }catch(std::runtime_error& e){
-                    std::cout << e.what() << std::endl;
-                }
-                break;
-            case 4:
-                return 0;
-            default:
-                std::cout << "Opción inválida." << std::endl;
-                break;
-        }
-    }
-    return 0;
-}
+#endif

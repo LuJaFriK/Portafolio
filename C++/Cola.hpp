@@ -2,59 +2,56 @@
 #define COLA_H
 
 #include <stdexcept> 
-#include "Nodo.hpp"
+#include "Data_structure.hpp"
 
 template<typename T>
-class Cola{
-    protected:
+class Cola : public data_structure<T>{
 
-        Nodo_doble<T>* head;
-        Nodo_doble<T>* back;
+protected:
+    Nodo_simple<T>* head;
+    Nodo_simple<T>* back;
+    
+public:
 
+    Cola():head(nullptr),back(nullptr){}
 
-    public:
-        Cola():head(nullptr),back(nullptr){}
+    ~Cola() override{ while(!empty()) unqueue(); }
 
-        virtual ~Cola(){
-            while(!empty()) desencolar();
+    bool empty() const override { 
+        return (head == nullptr); 
+    }
+
+    void queue(T value){
+        Nodo_simple<T>* nodo = new Nodo_simple<T>(value);
+        if(empty()){
+            head = nodo;
+            back = nodo;
+        }else{
+            back->setNext(nodo);
+            back = nodo;
         }
+        
+    }
 
-        bool empty() const { return (head == nullptr); }
+    T front() const {
+        if(empty()) throw std::out_of_range("The structure is empty.");
+        else return head->getValue();
+    }
 
-        virtual void encolar(T valor){
-            Nodo_doble<T>* nuevo = new Nodo_doble<T>(valor);
-            if(empty()){
-                head = nuevo;
-                back = nuevo;
-            }else{
-                link(back,nuevo);
-                back = nuevo;
-            }
-        }
+    T unqueue(){
+        if(empty()) throw std::out_of_range("The structure is empty.");
+        Nodo_simple<T>* del = head;
+        T val = del->getValue();
 
-        T pull()const{
-            if(empty()) throw std::out_of_range("No hay elementos en la cola.");
+        head = head->getNext();
+        if(empty()) back = nullptr;
 
-            return head->valor;
-        }
+        delete del;
+        return val;
+    }
 
-        virtual T desencolar(){
+    std::string mostrar() const override { return this->to_string(head); }
 
-            if(empty()) throw std::out_of_range("No hay elementos en la cola.");
-
-            const T val = head->getValue();
-            
-            Nodo_doble<T>*del = head;
-            head = head->getNext();
-            delete del;
-
-            if(head==nullptr) back = nullptr;
-
-            return val;
-
-        }
-
-        std::string mostrar()const{ return Nodo_to_string(head); }
 };
 
 #endif // COLA_H

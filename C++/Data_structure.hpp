@@ -1,5 +1,5 @@
-#ifndef NODO_H
-#define NODO_H
+#ifndef DATA_STRUCTURE_H
+#define DATA_STRUCTURE_H
 
 #include <string>
 #include <sstream> 
@@ -12,7 +12,7 @@ class Nodo_simple {
         Nodo_simple* next;
     public:
         //Constructores
-        Nodo_simple(T value = T(), Nodo_simple* next = nullptr) : value(value) , next(next) {}
+        Nodo_simple(const T& value = T(), Nodo_simple* next = nullptr) : value(value) , next(next) {}
         //Destructor
         virtual ~Nodo_simple() {}
         //Constructor de copia
@@ -36,7 +36,7 @@ class Nodo_doble : public Nodo_simple<T> {
     private:    
         Nodo_doble* prev;
     public:
-        Nodo_doble(T value = T(), Nodo_doble* prev = nullptr, Nodo_doble* next = nullptr) 
+        Nodo_doble(const T& value = T(), Nodo_doble* prev = nullptr, Nodo_doble* next = nullptr) 
         : Nodo_simple<T>(value, next), prev(prev) {} // 'next' (Nodo_doble*) se convierte a Nodo_simple*
         
         //Destructor
@@ -55,7 +55,7 @@ class Nodo_Tree : public Nodo_simple<T>{
     private:
         Nodo_Tree* parent;
     public:
-        Nodo_Tree(T value = T(), Nodo_Tree* next = nullptr): Nodo_simple<T>(value, next){}
+        Nodo_Tree(const T& value = T(), Nodo_Tree* next = nullptr): Nodo_simple<T>(value, next){}
         ~Nodo_Tree(){}
         
         Nodo_Tree* getNext() const {
@@ -83,7 +83,7 @@ class Nodo_dict : public Nodo_doble<T>{
     public:
         const U address;
 
-        Nodo_dict(U address,T value = T(), Nodo_dict* prev = nullptr, Nodo_dict* next = nullptr):Nodo_doble<T>(value, prev, next),address(address){}
+        Nodo_dict(const U& address,const T& value = T(), Nodo_dict* prev = nullptr, Nodo_dict* next = nullptr):Nodo_doble<T>(value, prev, next),address(address){}
         ~Nodo_dict(){}
         
         Nodo_dict* getNext() const {
@@ -96,7 +96,7 @@ class Nodo_dict : public Nodo_doble<T>{
 
         std::string to_string()override{
             std::stringstream ss;
-            ss << address << ':' << this->getValue();
+            ss << address << " : " << this->getValue();
             return ss.str();
         }
 };
@@ -106,6 +106,37 @@ void link(Nodo_doble<T>* back, Nodo_doble<T>* front) {
     if (back) back->setNext(front);
     if (front) front->setPrev(back);
 }
+
+template <typename T>
+class data_structure{
+    protected:
+        std::string to_string(Nodo_simple<T>* head) const{
+            if (!head) return "[]";
+
+            std::stringstream ss;
+            ss << "[";
+            Nodo_simple<T>* current = head;
+            
+            do {
+                
+                ss << current->getValue();
+                current = current->getNext();
+                if (current!=head && current!=nullptr) ss << ", "; 
+                
+            } while (current != head && current!=nullptr);//La condicion valida tanto estructuras circulares como lineales
+            
+            ss << "]";
+            return ss.str();
+        }
+    public:
+        virtual ~data_structure(){}
+
+        virtual bool empty() const = 0;
+
+        virtual std::string mostrar() const = 0;
+
+        
+};
 
 template <typename T>
 std::string Nodo_to_string(Nodo_simple<T>* head) {
@@ -118,40 +149,12 @@ std::string Nodo_to_string(Nodo_simple<T>* head) {
     do {
         
         ss << current->getValue();
-        if (current!=head) ss << ", "; 
         current = current->getNext();
+        if (current!=head && current!=nullptr) ss << ", "; 
         
-    } while (current != head); 
+    } while (current != head && current!=nullptr);//La condicion valida tanto estructuras circulares como lineales
     
     ss << "]";
-    return ss.str();
-}
-
-template </*Referencia*/typename U,/*Dato interno*/typename T>
-std::string Nodo_to_string(Nodo_dict<U,T>* head) { 
-    if (!head) return "{}"; 
-
-    std::stringstream ss;
-    ss << "{";
-    Nodo_dict<U,    T>* current = head;
-    
-    
-    
-    do {
-       
-        ss << current->to_string(); 
-        
-        
-        current = current->getNext();
-        
-        if (current != head) {
-           
-            ss << ", "; 
-        }
-        
-    } while (current != head); 
-    
-    ss << "}";
     return ss.str();
 }
 
