@@ -1,6 +1,6 @@
 #ifndef VECTOR_LISTA_H
 #define VECTOR_LISTA_H
-#include "Nodo.hpp"
+#include "Data_structure.hpp"
 #include <stdexcept>
 #include <string>
 
