@@ -1,8 +1,6 @@
 #ifndef PILADINAMICA_H
 #define PILADINAMICA_H
 
-#include <iostream>
-#include "InputUtils.hpp"
 #include "Data_structure.hpp"
 #include <string>
 template<typename T>

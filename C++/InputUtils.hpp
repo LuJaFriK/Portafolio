@@ -38,7 +38,7 @@ T input(const std::string& prompt) {
         if ((ss >> result) && ss.eof()) {
             valid = true;
         } else {
-            std::cout << "\n Entrada inválida. Por favor, ingrese un valor del tipo requerido." << std::endl;
+            std::cout << "\nEntrada inválida. Por favor, ingrese un valor del tipo requerido.\n";
             
             // Si el estado de cin está fallido (por si acaso), lo limpiamos
             if (std::cin.fail()) {

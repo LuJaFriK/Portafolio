@@ -21,19 +21,19 @@ class Linked_circular_list : public data_structure<T> {
             else if(deleted_node == head){
 
                 head = deleted_node->getNext(); 
-                link(back, head); // Enlaza la cola con la nueva cabeza
+                this->link(back, head); // Enlaza la cola con la nueva cabeza
 
             }
             //El nodo a eliminar es la cola
             else if(deleted_node == back) {
 
                 back = deleted_node->getPrev(); 
-                link(back, head); // Enlaza la nueva cola con la cabeza
+                this->link(back, head); // Enlaza la nueva cola con la cabeza
             }
             //Es cualquier nodo de enmedio
             else {
 
-                link(deleted_node->getPrev(), deleted_node->getNext());
+                this->link(deleted_node->getPrev(), deleted_node->getNext());
             }
             //Esta linea exacta es la que deja al siguiente como jugador principal
             head = deleted_node->getNext();
@@ -72,11 +72,11 @@ class Linked_circular_list : public data_structure<T> {
             if(empty()){
                 head = nuevo;
                 back = nuevo;
-                link(head, head);
+                this->link(head, head);
             }else{
-                link(nuevo, head); 
+                this->link(nuevo, head); 
                 
-                link(back, nuevo);
+                this->link(back, nuevo);
 
                 head = nuevo;
             }
@@ -125,7 +125,7 @@ class Linked_circular_list : public data_structure<T> {
             return current->getValue(); 
         }
 
-        std::string mostrar() const { return this->to_string(head); }
+        std::string mostrar() const override { return this->to_string(head); }
 
 };
 

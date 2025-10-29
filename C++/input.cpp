@@ -15,8 +15,8 @@ class Pila {
             delete[] Data;
         }
         
-        int* get(){
-            return Data;
+        int get(){
+            return *Data;
         }
 
         //retorna si la Pila está vacia

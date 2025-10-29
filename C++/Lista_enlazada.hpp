@@ -1,7 +1,7 @@
 #ifndef LINKEDLIST_H
 #define LINKEDLIST_H
 
-#include "Nodo.hpp"
+#include "Data_structure.hpp"
 #include <stdexcept>
 #include <string>
 

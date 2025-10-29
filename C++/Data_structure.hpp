@@ -102,12 +102,6 @@ class Nodo_dict : public Nodo_doble<T>{
 };
 
 template <typename T>
-void link(Nodo_doble<T>* back, Nodo_doble<T>* front) {
-    if (back) back->setNext(front);
-    if (front) front->setPrev(back);
-}
-
-template <typename T>
 class data_structure{
     protected:
         std::string to_string(Nodo_simple<T>* head) const{
@@ -128,6 +122,11 @@ class data_structure{
             ss << "]";
             return ss.str();
         }
+        
+        void link(Nodo_doble<T>* back, Nodo_doble<T>* front) {
+            if (back) back->setNext(front);
+            if (front) front->setPrev(back);
+        }
     public:
         virtual ~data_structure(){}
 
@@ -137,25 +136,5 @@ class data_structure{
 
         
 };
-
-template <typename T>
-std::string Nodo_to_string(Nodo_simple<T>* head) {
-    if (!head) return "[]";
-
-    std::stringstream ss;
-    ss << "[";
-    Nodo_simple<T>* current = head;
-    
-    do {
-        
-        ss << current->getValue();
-        current = current->getNext();
-        if (current!=head && current!=nullptr) ss << ", "; 
-        
-    } while (current != head && current!=nullptr);//La condicion valida tanto estructuras circulares como lineales
-    
-    ss << "]";
-    return ss.str();
-}
 
 #endif
