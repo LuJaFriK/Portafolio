@@ -12,32 +12,37 @@ class Arbol {
     private:
 
         Nodo_doble<T>* place(T value,Nodo_doble<T>* parent){
-            //Si el valor ya esta en el arbol no se pone nada
+
             if(parent->getValue() == value) return nullptr;
-            //Si el valor es menor, lo mandamos a la izquierda
+            //Recorre el arbol
             if(parent->getValue()>value && parent->getPrev()) return place(value,parent->getPrev());
-            //Si el valor es mayor, lo mandamos a la derecha
             if(parent->getValue()<value && parent->getNext()) return place(value,parent->getNext());
             //En caso que no hay un hijo con el que comparar
             return parent;
         }
 
-        void concatenate_inorden(std::stringstream& ss,Nodo_doble<T>* current){
-            if(current->getPrev()) concatenate_postorden(ss, current->getPrev());
-            ss << current->to_string()<<' '; 
-            if(current->getPrev()){
-                concatenate_postorden(ss, current->getPrev());
-            }
+        void concatenate_preorden(std::stringstream& ss, Nodo_doble<T>* current) {
+            if (!current) return;
+
+            ss << current->to_string() << "\n";
+            concatenate_preorden(ss, current->getPrev());
+            concatenate_preorden(ss, current->getNext());
         }
 
-        void concatenate_postorden(std::stringstream& ss,Nodo_doble<T>* current){
-            if(!current) return;
+        void concatenate_inorden(std::stringstream& ss, Nodo_doble<T>* current) {
+            if (!current) return;
 
-            concatenate(ss,current->getPrev());
+            concatenate_inorden(ss, current->getPrev());
+            ss << current->to_string() << "\n";
+            concatenate_inorden(ss, current->getNext());
+        }
 
-            concatenate(ss,current->getNext());
+        void concatenate_postorden(std::stringstream& ss, Nodo_doble<T>* current) {
+            if (!current) return;
 
-            ss<<current->to_string()<<' ';
+            concatenate_postorden(ss, current->getPrev());
+            concatenate_postorden(ss, current->getNext());
+            ss << current->to_string() << "\n";
         }
 
     public:
@@ -72,11 +77,18 @@ class Arbol {
             return value;
         }
         
-        std::string mostrar() {
+        std::string mostrar(int option) {
             std::stringstream ss;
-            ss<<'[';
-            concatenate(ss, root);
-            ss<<']';
+
+            switch(option){
+                case 1: concatenate_preorden(ss,root); break;
+
+                case 2: concatenate_inorden(ss, root); break;
+
+                case 3: concatenate_postorden(ss, root); break;
+
+                default: concatenate_inorden(ss, root); break;
+            }
             return ss.str();
         }
 };
