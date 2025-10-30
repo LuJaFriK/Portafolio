@@ -11,14 +11,38 @@ class Arbol {
         Nodo_doble<T>* root;
     private:
 
-        Nodo_doble<T>* place(T value,Nodo_doble<T>* parent){
+        Nodo_doble<T>* parent_place(T value,Nodo_doble<T>* parent){
 
             if(parent->getValue() == value) return nullptr;
             //Recorre el arbol
-            if(parent->getValue()>value && parent->getPrev()) return place(value,parent->getPrev());
-            if(parent->getValue()<value && parent->getNext()) return place(value,parent->getNext());
+            if(parent->getValue()>value && parent->getPrev()) return parent_place(value,parent->getPrev());
+            if(parent->getValue()<value && parent->getNext()) return parent_place(value,parent->getNext());
             //En caso que no hay un hijo con el que comparar
             return parent;
+        }
+
+        Nodo_doble<T>* search(T value,Nodo_doble<T>* current){
+            if(!current) return nullptr;
+            if(current->getValue()==value) return current;
+
+            if(current->getValue()>value) return search(value, current->getPrev());
+            else return search(value, current->getNext());
+        }
+
+        int get_level(const T& value,Nodo_doble<T>* current,int nivel){
+            if(!current) return -1;
+
+            if(current->getValue()==value) return nivel;
+
+            if(current->getValue()>value) return get_level(value, current->getPrev(),nivel+1);
+            else return get_level(value, current->getNext(),nivel+1);
+        }
+
+        int get_grade(Nodo_doble<T>* current){
+            int grade{0};
+            if(current->getPrev()) grade++;
+            if(current->getNext()) grade++;
+            return grade;
         }
 
         void concatenate_preorden(std::stringstream& ss, Nodo_doble<T>* current) {
@@ -50,14 +74,14 @@ class Arbol {
         ~Arbol(){}
         Arbol(const Arbol& other){}
         
-        bool empty(){ return root == nullptr; }
+        bool empty()const { return root == nullptr; }
         
-        void set(T valor){
+        void add(T valor){
             if(empty()){
                 root = new Nodo_doble<T>(valor);
                 return;
             }
-            Nodo_doble<T>* parent = place(valor,root);
+            Nodo_doble<T>* parent = parent_place(valor,root);
             if(parent){
                 //Crear nodo
                 Nodo_doble<T>* nuevo = new Nodo_doble<T>(valor);
@@ -68,14 +92,25 @@ class Arbol {
 
             
         }
+
+        std::string buscar_valor(const int& value){
+            Nodo_doble<T>* nodo = search(value,root);
+            if(nodo){
+                return "El grado del nodo es: " + std::to_string(get_grade(nodo))
+                +" El nivel es:"+std::to_string(get_level(value,root, 0))+"."; 
+            }else{
+                return "No se encontró el nodo.";
+            }
+            
+        }
         
         T get(){ return root->getValue(); }
         
-        T pop(){
-            T value = root->getValue();
-
-            return value;
-        }
+        //T pop(){
+        //    T value = root->getValue();
+        //
+        //    return value;
+        //}
         
         std::string mostrar(int option) {
             std::stringstream ss;
