@@ -106,11 +106,11 @@ class Arbol {
         
         T get(){ return root->getValue(); }
         
-        //T pop(){
-        //    T value = root->getValue();
-        //
-        //    return value;
-        //}
+        void remove(T value){
+            
+
+            
+        }
         
         std::string mostrar(int option) {
             std::stringstream ss;
