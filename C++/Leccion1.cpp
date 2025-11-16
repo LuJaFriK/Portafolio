@@ -23,6 +23,14 @@ int operadores(){
 
 int main(){
     cout <<"Nombre: "<<variables()<<endl;
+    const int HOLA{10};
+    const int HOLA2{20};
+    const int* ptr = &HOLA;
+    cout << *ptr << endl;
+    ptr  = &HOLA2;
+    
+    cout << *ptr << endl;
+    
     return 0;
 }
 

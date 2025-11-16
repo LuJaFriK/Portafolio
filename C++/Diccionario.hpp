@@ -120,18 +120,17 @@ class Diccionario : public data_structure<T>{
             if (!head) return "{}"; 
 
             std::stringstream ss;
-            ss << "{";
+            ss << '{';
             Nodo_dict<U,T>* current = head;
             
             do {
-            
                 ss << current->to_string(); 
                 current = current->getNext();
                 if (current != head && current!=nullptr) ss << ", "; 
 
             } while (current != head && current!=nullptr); 
             
-            ss << "}";
+            ss << '}';
             return ss.str();
         }
 
