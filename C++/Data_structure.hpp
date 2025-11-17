@@ -95,7 +95,7 @@ class data_structure{
             return ss.str();
         }
         
-        void link(Nodo_doble<T>* back, Nodo_doble<T>* front) {
+        inline void link(Nodo_doble<T>* back, Nodo_doble<T>* front) {
             if (back) back->setNext(front);
             if (front) front->setPrev(back);
         }
@@ -107,6 +107,12 @@ class data_structure{
         virtual std::string mostrar() const = 0;
 
         
+};
+template<typename T>
+struct arista{
+  T nodo;
+  int costo;
+  arista(T nodo,int costo):nodo(nodo),costo(costo){}
 };
 
 #endif

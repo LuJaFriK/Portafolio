@@ -29,7 +29,6 @@ class Diccionario : public data_structure<T>{
     public:
         Diccionario():head(nullptr),back(nullptr){}
         
-        //Destructor virtual por si se atora una herencia
         virtual ~Diccionario() override { clear(); }
         
         //Constructor de copia
