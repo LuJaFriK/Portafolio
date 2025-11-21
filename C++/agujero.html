@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Simulación de Agujero Negro - Gemini Engine</title>
+    <style>
+        body { margin: 0; overflow: hidden; background-color: #000; }
+        canvas { display: block; }
+        #ui {
+            position: absolute;
+            top: 20px; left: 20px;
+            color: white;
+            font-family: 'Courier New', monospace;
+            pointer-events: none;
+            text-shadow: 0 0 5px cyan;
+        }
+    </style>
+</head>
+<body>
+    <div id="ui">
+        <h1>SINGULARIDAD [V.1.0]</h1>
+        <p>Usa el MOUSE para rotar la cámara.</p>
+        <p>La luz se curva debido a la métrica de Schwarzschild.</p>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <script>
+        // --- CONFIGURACIÓN DEL MOTOR ---
+        const scene = new THREE.Scene();
+        const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+        const renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        // --- GEOMETRÍA ---
+        // Usamos un plano simple que cubre toda la pantalla para pintar píxel por píxel (Shader)
+        const geometry = new THREE.PlaneGeometry(2, 2);
+
+        // --- SHADER (La Física del Agujero Negro) ---
+        // Esto corre en la GPU. Calcula cómo la luz se dobla.
+        const fragmentShader = `
+            uniform vec2 u_resolution;
+            uniform vec2 u_mouse;
+            uniform float u_time;
+
+            // Función de ruido para generar estrellas falsas
+            float random(vec2 st) {
+                return fract(sin(dot(st.xy, vec2(12.9898,78.233))) * 43758.5453123);
+            }
+
+            void main() {
+                vec2 uv = gl_FragCoord.xy / u_resolution.xy;
+                uv = uv * 2.0 - 1.0;
+                uv.x *= u_resolution.x / u_resolution.y;
+
+                // Posición de la cámara (simulada por el mouse)
+                vec3 camPos = vec3(0.0, 0.0, -3.0);
+                vec3 rayDir = normalize(vec3(uv, 1.0));
+
+                // Rotación basada en el mouse
+                float rotX = (u_mouse.y / u_resolution.y - 0.5) * 3.0;
+                float rotY = (u_mouse.x / u_resolution.x - 0.5) * 3.0;
+                
+                mat3 rot = mat3(
+                    cos(rotY), 0.0, sin(rotY),
+                    0.0, 1.0, 0.0,
+                    -sin(rotY), 0.0, cos(rotY)
+                ) * mat3(
+                    1.0, 0.0, 0.0,
+                    0.0, cos(rotX), -sin(rotX),
+                    0.0, sin(rotX), cos(rotX)
+                );
+                
+                rayDir = rot * rayDir;
+                camPos = rot * camPos;
+
+                // --- FÍSICA DEL AGUJERO NEGRO ---
+                vec3 color = vec3(0.0);
+                float blackHoleMass = 0.4;
+                float schwarzschildRadius = 2.0 * blackHoleMass;
+                
+                // Disco de acreción (definido por planos)
+                vec3 diskNormal = vec3(0.0, 1.0, 0.0);
+                
+                // Raymarching simplificado (Gravitational Lensing)
+                vec3 p = camPos;
+                float dist = 0.0;
+                bool hitEventHorizon = false;
+                float glow = 0.0;
+
+                for(int i=0; i<80; i++) {
+                    float r = length(p);
+                    
+                    // Si tocamos el horizonte de sucesos
+                    if(r < schwarzschildRadius) {
+                        hitEventHorizon = true;
+                        break;
+                    }
+                    
+                    // Curvatura de la luz (Fuerza de gravedad simulada)
+                    // La luz se dobla hacia el centro (0,0,0)
+                    vec3 gravity = normalize(-p) * (blackHoleMass / (r*r)) * 0.15;
+                    rayDir = normalize(rayDir + gravity);
+                    
+                    // Mover el rayo
+                    p += rayDir * 0.2;
+                    
+                    // --- DISCO DE ACRECIÓN ---
+                    // Si el rayo pasa cerca del plano Y=0
+                    if(abs(p.y) < 0.05 && r > schwarzschildRadius * 1.5 && r < schwarzschildRadius * 6.0) {
+                        float noise = random(floor(p.xz * 10.0)); // Textura simple
+                        float diskIntensity = 1.0 / abs(r - schwarzschildRadius * 2.0);
+                        glow += 0.02 * diskIntensity * (0.5 + 0.5 * noise);
+                    }
+                }
+
+                if(hitEventHorizon) {
+                    color = vec3(0.0); // Negro absoluto
+                } else {
+                    // Fondo de estrellas (Background)
+                    float star = step(0.995, random(rayDir.xy * 50.0));
+                    color = vec3(star);
+                }
+
+                // Añadir el brillo del disco de acreción (color naranja/fuego)
+                color += vec3(1.0, 0.5, 0.1) * glow * 2.0;
+
+                gl_FragColor = vec4(color, 1.0);
+            }
+        `;
+
+        const material = new THREE.ShaderMaterial({
+            fragmentShader: fragmentShader,
+            uniforms: {
+                u_resolution: { value: new THREE.Vector2() },
+                u_mouse: { value: new THREE.Vector2() },
+                u_time: { value: 0.0 }
+            }
+        });
+
+        const plane = new THREE.Mesh(geometry, material);
+        scene.add(plane);
+
+        // --- INTERACTIVIDAD ---
+        document.addEventListener('mousemove', (e) => {
+            material.uniforms.u_mouse.value.x = e.clientX;
+            material.uniforms.u_mouse.value.y = e.clientY;
+        });
+
+        function animate(time) {
+            requestAnimationFrame(animate);
+            material.uniforms.u_resolution.value.set(window.innerWidth, window.innerHeight);
+            material.uniforms.u_time.value = time * 0.001;
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        window.addEventListener('resize', () => {
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
+</body>
+</html>
