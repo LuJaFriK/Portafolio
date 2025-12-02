@@ -17,6 +17,7 @@ class Mesa:
         for alimento in self.pedido:
             print(alimento.detalles())
         print("===============================")
+
     
     def __str__(self) -> str:
         activa = "Si" if self.activo else "No"

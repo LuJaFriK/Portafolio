@@ -3,18 +3,6 @@ from Alimento import Alimento ; from Cafe import Cafe ; from Snack import Snack
 from Mesa import Mesa ; from Mesero import Mesero
 from datetime import datetime ; import pickle
 
-def guardar_datos(meseros: dict,menu: dict) -> None:
-        with open("Datos.dat", "wb") as f:
-            pickle.dump((meseros,menu), f)
-    
-def cargar_datos() -> tuple[dict, dict]:
-    try:
-        with open("Datos.dat", "rb") as f:
-            meseros,menu = pickle.load(f)
-            return meseros,menu
-    except (FileNotFoundError, EOFError):
-        return {}, {}
-
 def login(meseros: dict) -> Optional[Mesero]:
         mesero = None
         index = int(input("Ingresa el codigo de mesero: "))
